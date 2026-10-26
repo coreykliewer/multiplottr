@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>jquery.placeholder specs</title>
+	
+	<link rel="stylesheet" href="../../matoilic-jquery.placeholder-2ce5a44/vendor/jasmine/jasmine.css" type="text/css" charset="utf-8">
+	
+	<script type="text/javascript" charset="utf-8">
+	   var debug = true;
+	</script>
+	<script src="../../matoilic-jquery.placeholder-2ce5a44/vendor/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../matoilic-jquery.placeholder-2ce5a44/jquery.placeholder.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script src="../../matoilic-jquery.placeholder-2ce5a44/vendor/jasmine/jasmine.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../../matoilic-jquery.placeholder-2ce5a44/vendor/jasmine/jasmine-html.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script src="../../matoilic-jquery.placeholder-2ce5a44/spec/placeholder.js" type="text/javascript" charset="utf-8"></script>
+	
+    <script type="text/javascript">
+        (function($) {
+            var jasmineEnv = jasmine.getEnv();        
+            jasmineEnv.updateInterval = 1000;
+            var trivialReporter = new jasmine.TrivialReporter();
+            jasmineEnv.addReporter(trivialReporter);
+    
+            jasmineEnv.specFilter = function(spec) {
+                return trivialReporter.specFilter(spec);
+            };
+    
+            $(window).load(function() {
+                jasmineEnv.execute();
+            });
+        })(jQuery);
+    </script>
+</head>
+<body>
+    <form action="#" method="get" style="display: none;"></form>
+</body>
+</html>

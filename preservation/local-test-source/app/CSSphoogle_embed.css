@@ -1,0 +1,338 @@
+#map {
+	border: 1px solid #000000;
+	text-align: left;	
+}
+html {
+	margin: 0px;
+	padding: 0px;
+}
+
+
+body {
+	margin: 0px;
+	padding: 0px;
+	font-family: "Trebuchet MS", Arial, Helvetica;
+	font-size: 62.5%;
+	text-align: center;
+	background-color: #FFFFFF;
+}
+
+/* v\:* {
+      behavior:url(#default#VML);
+    }*/
+	
+	.loadcontainer {
+	position:absolute;
+	width:400px;
+	margin:-100px 0px 0px -200px;
+	top: 50%;
+	left: 50%;
+	text-align: center;
+	padding: 0px;
+	overflow: auto;
+	font-size: 1em;
+	color: #999999;
+}
+
+.iwstyle {
+	background-color: #FFFFFF;
+	height: 100%;
+}
+
+.infoWindowDiv {
+	font-family: Arial;
+	font-size: 10pt;
+	width: 300px;
+	margin-top: 0px;
+	*margin-bottom: 0px;
+	margin-bottom: 1px;
+	background-color: #FFFFFF;
+	*margin-right: 1px;
+	*padding-right: 1px;
+	height: 100%;
+	margin-right: 1px;
+}
+
+
+.infoWindowDiv a.nav {
+	background-color: #DDE6EE;
+	font-size: 0.9em;
+	text-decoration: none;
+	padding-top: 0px;
+	padding-right: 3px;
+	padding-bottom: 0px;
+	padding-left: 3px;
+	color: #003A51;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #D6E1EB;
+	border-right-color: #7499BA;
+	border-bottom-color: #7499BA;
+	border-left-color: #D6E1EB;
+	line-height: 1.5em;
+	width: 175px;
+	display: block;
+	background-image: url(images/bluebak.gif);
+}
+
+.infonav {
+	list-style-type: none;
+	margin-left: 0px;
+	padding: 0px;
+}
+
+li {
+	margin-top: 0.5em;
+}
+.infoWindowDiv a.nav:hover {
+	background-color: #7499BA;
+	font-size: 0.9em;
+	text-decoration: none;
+	padding-top: 0px;
+	padding-right: 3px;
+	padding-bottom: 0px;
+	padding-left: 3px;
+	color: #FFFFFF;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #365470;
+	border-right-color: #7499BA;
+	border-bottom-color: #7499BA;
+	border-left-color: #365470;
+	line-height: 1.5em;
+	width: 175px;
+	display: block;
+	background-image: url(images/bluebak-hover.gif);
+}
+
+.infoWindowDiv p {
+	margin-top: .25em;
+	margin-bottom: .25em;
+}
+
+#bottomNote {
+	margin-top: 1em;
+	display: block;
+}
+
+.formfields {
+	margin-right: 5px;
+	font-family: "Trebuchet MS", Helvetica, Arial;
+	font-size: .9em;
+	margin-bottom: .5em;
+
+}
+
+.formfieldstextarea {
+	margin-right: 5px;
+	font-family: "Trebuchet MS", Helvetica, Arial;
+	font-size: .9em;
+	width: 185px;
+	display: block;
+	margin-bottom: .5em;
+}
+
+.popupMessage {
+	background-color: #ECE9D8;
+	display: block;
+	padding: 10px;
+	width: 200px;
+	border: 1px solid #ACA899;
+	position: absolute;
+	z-index: 100;
+}
+
+.smallLink {
+	font-size: .8em;
+	color: #000066;
+}
+
+#header {
+	background-image: url(images/blueBack.jpg);
+	height: 67px;
+	width: 100%;
+	margin-bottom: 10px;
+}
+#developer {
+	float: right;
+	width: 275px;
+	color: #FFFFFF;
+	font-size: 1.2em;
+	text-align: right;
+	margin-right: .5em;
+}
+#developer a {
+	color: #FFFFFF;
+	font-weight: bold;
+}
+#developer a:hover {
+	color: #FFFFFF;
+	font-weight: bold;
+	text-decoration: none;
+}
+#legend {
+	background-color: #FFFFFF;
+	width: 200px;
+	height: 400px;
+	border: 1px solid #000000;
+	z-index: 500;
+	margin-top: 33px;
+	position: absolute;
+	margin-left: -10px;
+	overflow-x: hidden;
+	*margin-right:-3px;
+}
+
+.clearBoth {
+	clear: both;
+}
+.floatRightBox {
+	float: right;
+	width: 200px;
+}
+
+.legendImageBox {
+	text-align: center;
+	width: 25px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #ECE9D8;
+}
+
+.legendRow{
+
+}
+
+
+.legend {
+	font-size: .6em;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #ECE9D8;
+}
+
+.legendTable{
+	margin-top: 5px;
+}
+
+
+.legend a {
+	color: #990000;
+	text-decoration: none;
+	display: block;
+	padding: 4px;
+}
+.legend a:hover {
+	color: #990000;
+	text-decoration: none;
+	display: block;
+	background-color: #FFFAEA;
+	padding: 3px;
+	border: 1px solid #EDD9A2;
+}
+.adDiv {
+	width: 730px;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: center;
+	height: 90px;
+}
+.hide {
+	display: none;
+}
+.polygonTable {
+	margin-bottom: .5em;
+	text-align: center;
+}
+.cell1, .cell2,.cell3, .cell4, .cell5, .cell6 {
+	background-color: #CC0000;
+	opacity:.75;
+	filter: alpha(opacity=75);
+	-moz-opacity: 0.75;
+	text-align: center;
+	cursor: pointer;
+	height: 13px;
+	width: 13px;
+	border: 2px solid #FFFFFF;
+}
+.cell2 {
+	background-color: #FF6600;
+}
+.cell3 {
+	background-color: #FFCC00;
+}
+.cell4 {
+	background-color: #339933;
+}
+.cell5 {
+	background-color: #0a68f5;
+}
+.cell6 {
+	background-color: #990099;
+}
+#polygonform {
+	margin: 0px;
+	padding: 0px;
+}
+#polygonform .polygonTable .nav {
+	width: 100px;
+}
+
+
+.cell1:hover {
+	border: 2px solid #CC0000;
+}
+.cell2:hover {
+	border: 2px solid #FF6600;
+}
+.cell3:hover {
+	border: 2px solid #FFCC00;
+}
+.cell4:hover {
+	border: 2px solid #339933;
+}
+.cell5:hover {
+	border: 2px solid #0a68f5;
+}
+.cell6:hover {
+	border: 2px solid #990099;
+}
+.hide {
+	display: none;
+}
+
+.show {
+	display: block;
+}
+h1 {
+	display: block;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: .5em;
+	margin-left: 0px;
+	font-size: 1.1em;
+}
+
+p {
+	margin-bottom: 1em;
+}
+
+.group0, .group1, .group2, .group3, .group4, .group5, .group6, .group7, .group8, .group9, .group10, .group11, .group12, .group13, .group14, .group15, .group16, .group17, .group18, .group19, .group20, .group21, .group22, .group23, .group24, .group25, .group26 {
+	display: table-row;
+}
+
+.hidegroup0, .hidegroup1, .hidegroup2, .hidegroup3, .hidegroup4, .hidegroup5, .hidegroup6, .hidegroup7, .hidegroup8, .hidegroup9, .hidegroup10, .hidegroup11, .hidegroup12, .hidegroup13, .hidegroup14, .hidegroup15, .hidegroup16, .hidegroup17, .hidegroup18, .hidegroup19, .hidegroup20, .hidegroup21, .hidegroup22, .hidegroup23, .hidegroup24, .hidegroup25, .hidegroup26 {
+	display: none;
+}

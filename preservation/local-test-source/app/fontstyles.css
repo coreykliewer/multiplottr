@@ -1,0 +1,298 @@
+
+@charset "UTF-8";
+
+@font-face {
+  font-family: "mpfonts";
+  src:url("fonts/mpfonts.eot");
+  src:url("fonts/mpfonts.eot?#iefix") format("embedded-opentype"),
+    url("fonts/mpfonts.ttf") format("truetype"),
+    url("fonts/mpfonts.svg#mpfonts") format("svg"),
+    url("fonts/mpfonts.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "mpfonts";
+  content: attr(data-icon);
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none !important;
+  speak: none;
+  display: inline-block;
+  text-decoration: none;
+  width: 1em;
+  line-height: 1em;
+  -webkit-font-smoothing: antialiased;
+}
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  font-family: "mpfonts";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none !important;
+  speak: none;
+  display: inline-block;
+  text-decoration: none;
+  width: 1em;
+  line-height: 1em;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+.icon-cloud-upload-2:before {
+  content: "a";
+}
+
+.icon-letter-mail-1:before {
+  content: "b";
+}
+
+.icon-favorite-map-pin:before {
+  content: "c";
+}
+
+.icon-map-pin-5:before {
+  content: "d";
+}
+
+.icon-twitter:before {
+  content: "e";
+}
+
+.icon-twitter-alt:before {
+  content: "f";
+}
+
+.icon-upload-1:before {
+  content: "g";
+}
+
+.icon-download-1:before {
+  content: "h";
+}
+
+.icon-delete-trash-1:before {
+  content: "i";
+}
+
+.icon-bubble-talk-1:before {
+  content: "j";
+}
+
+.icon-facebook-alt:before {
+  content: "k";
+}
+
+.icon-gears-setting:before {
+  content: "l";
+}
+
+.icon-check-5:before {
+  content: "m";
+}
+
+.icon-settings:before {
+  content: "n";
+}
+
+.icon-exclamation:before {
+  content: "o";
+}
+
+.icon-close:before {
+  content: "p";
+}
+
+.icon-settings-1:before {
+  content: "q";
+}
+
+.icon-facebook-places:before {
+  content: "r";
+}
+
+.icon-fontawesome-webfont:before {
+  content: "s";
+}
+
+.icon-fontawesome-webfont-1:before {
+  content: "t";
+}
+
+.icon-fontawesome-webfont-2:before {
+  content: "u";
+}
+
+.icon-fontawesome-webfont-3:before {
+  content: "v";
+}
+
+.icon-fontawesome-webfont-4:before {
+  content: "w";
+}
+
+.icon-fontawesome-webfont-5:before {
+  content: "x";
+}
+
+.icon-fontawesome-webfont-6:before {
+  content: "y";
+}
+
+.icon-fontawesome-webfont-7:before {
+  content: "z";
+}
+
+.icon-fontawesome-webfont-8:before {
+  content: "A";
+}
+
+.icon-map:before {
+  content: "B";
+}
+
+.icon-pin:before {
+  content: "C";
+}
+
+.icon-reload:before {
+  content: "D";
+}
+
+.icon-settings-2:before {
+  content: "E";
+}
+
+.icon-x:before {
+  content: "F";
+}
+
+.icon-x-alt:before {
+  content: "G";
+}
+
+.icon-mail:before {
+  content: "H";
+}
+
+.icon-info-circled:before {
+  content: "I";
+}
+
+.icon-upload-cloud:before {
+  content: "J";
+}
+
+.icon-placepin:before {
+  content: "K";
+}
+
+.icon-warning-alt:before {
+  content: "L";
+}
+
+.icon-white-question:before {
+  content: "M";
+}
+
+.icon-warning:before {
+  content: "N";
+}
+
+.icon-information-black:before {
+  content: "O";
+}
+
+.icon-cross-mark:before {
+  content: "P";
+}
+
+.icon-home:before {
+  content: "Q";
+}
+
+.icon-black-question:before {
+  content: "R";
+}
+
+.icon-cancel-circle:before {
+  content: "S";
+}
+
+.icon-arrow-big-up:before {
+  content: "T";
+}
+
+.icon-list:before {
+  content: "U";
+}
+
+.icon-list-1:before {
+  content: "V";
+}
+
+.icon-multipleplots:before {
+  content: "W";
+}
+
+.icon-map-1:before {
+  content: "X";
+}
+
+.icon-fontawesome-webfont-9:before {
+  content: "Y";
+}
+
+.icon-fontawesome-webfont-10:before {
+  content: "Z";
+}
+
+.icon-check-alt:before {
+  content: "0";
+}
+
+.icon-check-circle:before {
+  content: "1";
+}
+
+.icon-fontawesome-webfont-11:before {
+  content: "2";
+}
+
+.icon-arrow-right-alt1:before {
+  content: "3";
+}
+
+.icon-right-bold:before {
+  content: "4";
+}
+
+.icon-arrow-doubled-right:before {
+  content: "5";
+}
+
+.icon-content-43:before {
+  content: "6";
+}
+
+.icon-reorder:before {
+  content: "7";
+}
+
+.icon-menu:before {
+  content: "8";
+}
+
+.icon-user:before {
+  content: "9";
+}
+
+.icon-user-outline:before {
+  content: "!";
+}
+

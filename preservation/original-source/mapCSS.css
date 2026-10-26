@@ -1,0 +1,531 @@
+@charset "utf-8";
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+textarea, div, form { 
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+h2{
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-bottom: .5em;
+}
+
+body {	font-family: 'PT Sans', sans-serif; background-color: #000;}
+
+#topBannerNav {
+	height: 50px;
+	width: 100%;
+	background: #f2f5f6; /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2YyZjVmNiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjM3JSIgc3RvcC1jb2xvcj0iI2UzZWFlZCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNjOGQ3ZGMiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,  #f2f5f6 0%, #e3eaed 37%, #c8d7dc 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f5f6), color-stop(37%,#e3eaed), color-stop(100%,#c8d7dc)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #f2f5f6 0%,#e3eaed 37%,#c8d7dc 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #f2f5f6 0%,#e3eaed 37%,#c8d7dc 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #f2f5f6 0%,#e3eaed 37%,#c8d7dc 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #f2f5f6 0%,#e3eaed 37%,#c8d7dc 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f5f6', endColorstr='#c8d7dc',GradientType=0 ); /* IE6-8 */
+
+}
+
+#parent {
+	margin-top: 50px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #000;	
+	}
+
+#map_canvas {
+}
+
+/**/ #mapWrapper {
+	width: 100%;
+	margin-right: 250px;
+	background-color: #000;
+	height: 100%;
+
+}
+
+
+/**/
+#mapContainer {
+	background-color: #000;
+	position: absolute;
+	left: 0px;
+	right: 240px;
+	height: 100%;
+	top: 0px;
+}
+#mapLegend {
+	background-color: #000;
+	float: right;
+	height: 100%;
+	width: 239px;
+	border-left-width: 1px;
+	border-left-style: solid;
+	border-left-color: #000;
+}
+
+#legendDiv, #groupControlDiv, #markerSelection {
+	font-size: 11px;
+	text-align: left!important;
+	line-height: 13px;
+	/*IE 7 AND 8 DO NOT SUPPORT BORDER RADIUS*/
+	-webkit-box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.25);
+	-moz-box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.25);
+box-shadow:         0px 0px 10px rgba(50, 50, 50, 0.25)
+	/*IE 7 AND 8 DO NOT SUPPORT BLUR PROPERTY OF SHADOWS*/
+	opacity: 0.9;
+-ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity = 90);
+	/*-ms-filter must come before filter*/
+	filter: alpha(opacity = 90);
+	background-color: #FFF;/*INNER ELEMENTS MUST NOT BREAK THIS ELEMENTS BOUNDARIES*/
+	padding-top: 20px;/*All filters must be placed together*/
+}
+
+#markerSelection {display:none;}
+
+#mapLegend #legendDiv, #mapLegend #groupControlDiv {
+	width: 100%;
+}
+
+#groupControlDiv {
+		font-size: 11px;
+
+	max-height: 100px;
+	margin-bottom: 0px;
+	}
+	
+#mapLegend #groupControlDiv {}	
+
+#groupControlDiv section {	font-size: 13px;
+}	
+
+
+#groupControlDiv  a {
+	text-decoration: none;
+	display: block;
+	padding: 4px;
+	color: #007DB2;
+}
+
+#groupControlDiv a:hover {
+	background-color: #EDEDED;
+}
+	
+	
+.markerHidden {
+	color: #8B8B8B!important;
+}	
+
+#legendDiv header, #groupControlDiv header, #markerSelection header{
+	font-family: 'PT Sans';
+	background-color: #00a8dc;
+	text-align: center;
+	padding: 2px;
+	font-size: 15px;
+	font-weight: bold;
+	text-transform: uppercase;
+	position: absolute;
+	width: 236;
+	height: 15px;
+	margin-top: -20px;
+	line-height: 15px;
+	color: #FFF;	
+}
+
+
+
+#legendDiv {
+	overflow: auto;
+	/*height:300px;*/
+	max-height: 40%;
+	margin-top: 0px;
+}
+
+#mapLegend #legendDiv {margin-top: 0px; }
+
+#legendCollapse, #groupCollapse, #mapToolCollapse, #markerSelCollapse {
+	background-image: url(images/divControl_-_white.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	margin: 0px;
+	float: right;
+	height: 13px;
+	width: 14px;
+	cursor: pointer;
+}
+
+#legendExpand, #groupExpand, #mapToolExpand, #markerSelExpand {
+	background-image: url(images/divControl_+_white.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	margin: 0px;
+	float: right;
+	height: 13px;
+	width: 14px;
+	cursor: pointer;
+	display: none;
+}
+
+
+#legendDiv section, #groupControlDiv section {
+	cursor: pointer!important;
+	overflow: auto;
+	height: 100%;
+}
+
+#mapLegend #legendDiv section, #mapLegend #groupControlDiv section  {
+	height: auto;
+}
+
+
+#legendDiv h1 {
+	font-size: 14px;
+	margin:0; padding:0;
+}
+
+#legendDiv a {
+	color: #8C0000;
+	text-decoration: none;
+	display: block;
+	margin-bottom: 0px;
+	overflow: hidden;
+	padding: 4px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #E3E3E3;
+}
+
+
+
+#legendDiv a:hover {
+	background-color: #E8E8E8;
+} 
+
+#legendDiv .marker {float:right;
+}
+
+.infoBox {
+	padding: 10px;
+    width: 250px!important;
+
+}
+
+.infoBox img {
+	max-width: 175px;
+	height:auto;
+	margin-bottom:.5em;
+}
+
+
+.infoBoxWrap {
+	padding: 5px;
+	border: 5px solid #00a8dc;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;/*IE 7 AND 8 DO NOT SUPPORT BORDER RADIUS*/
+	background-repeat: no-repeat;
+	background-position: center bottom;
+	background-color: #FFF;
+	-webkit-box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.25);
+-moz-box-shadow:    0px 0px 10px rgba(50, 50, 50, 0.25);
+box-shadow:         0px 0px 10px rgba(50, 50, 50, 0.25)
+}
+
+.infoBoxWrap h1 {
+	font-size: 1.1em;
+	font-weight: bolder;
+	margin-bottom: .5em;
+}
+
+.infoBoxWrap a {
+	color: #007DB2;
+	text-decoration: underline;
+}
+
+.infoBoxWrap a:hover {
+	color: #999;
+}
+
+.infoBoxWrap em {
+	font-style: italic;
+}
+
+.triangle {
+	width: 0;
+	height: 0;
+	border-left: 0px solid transparent;
+	border-right: 20px solid transparent;
+	border-top: 20px solid #00a8dc;
+	margin-left: auto;
+	margin-right: auto;
+	
+	}
+	
+#mapTool {
+	/*replace 900px with your width*/
+	width: 580px;
+	height: 250px;
+	padding: 10px;
+	}
+		
+	
+#markerLocation {
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	z-index: 999999;
+	background-color: #abd8e3;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #000;
+	}	
+	
+#markerLocation header{
+	color: #FFF;
+	background-color: #006794;
+	padding: 5px;
+	font-weight: bold;
+}		
+	
+	
+
+#mapToolExpand {display:block}
+#mapToolCollapse {display:none;}
+
+
+
+/* CSS Document */
+#popOutWrapper {
+	position: absolute;
+	z-index: 888888;
+	width: 100%;
+}
+
+#popOutWrapper #batchAddress {
+	background-color: #00a8dc;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #000;
+	height: 400px;
+	width: 100%;
+	display: none;
+}
+
+#batchAddress .content {
+	padding: 10px;
+	float: left;
+	width: 240px;
+	color: #FFF;
+}
+
+#batchAddress #mapTool section {
+	position: absolute;
+    left: 250px;
+    top: 10px;
+    right: 10px;
+    bottom: 80px;
+	}
+
+#batchAddress #batchAddressForm {
+	margin-left: 250px;
+	padding: 10px;
+	height: 100%;
+}
+
+#batchAddress #markerLocationField {
+	width: 100%;
+	height: 100%;
+	font-size: .8em;
+	font-family: 'PT Sans', sans-serif;
+	line-height: 2em;
+	/*white-space: nowrap;*/
+	padding-left: 10px;
+	padding-right: 10px;
+	border: 1px solid #FFF;	
+}
+
+#batchAddress .buttonHolder {
+	position: absolute;
+	height: 30px;
+	bottom: 23px;
+	left:250px;
+}
+
+#popOutWrapper #BatchAddressTab {
+	background-color: #00a8dc;
+	padding: 5px;
+	color: white;
+	width: 200px;
+	font-weight: bold;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-top-color: #000;
+	border-right-color: #000;
+	border-bottom-color: #000;
+	border-left-color: #000;
+}
+
+#markerSelection ul {padding:5px;}
+
+#markerSelection ul li {
+	display: inline;
+}
+
+
+
+#markerSelection ul li img {
+	cursor: pointer;
+	border: 1px solid #FFF;
+	padding: 3px;
+}
+
+#markerSelection  .selected {
+	border: 1px solid #930!important;
+	background-color: #E1E1E1;
+}
+
+#markerName, #markerURL {
+	width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+	
+}
+
+
+
+.draggableIcon {
+	position: relative;
+	z-index: 9999999;
+}
+
+.buttonHolder {
+	margin-top: 1em;
+	margin-bottom: .5em;	
+	}
+
+.button {
+	border-top: 1px solid #96d1f8;
+	background: #65a9d7;
+	background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#65a9d7));
+	background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+	background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+	background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+	background: -o-linear-gradient(top, #3e779d, #65a9d7);
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	box-shadow: rgba(0,0,0,1) 0 1px 0;
+	text-shadow: rgba(0,0,0,.4) 0 1px 0;
+	color: white!important;
+	font-size: 12px;
+	font-family: Helvetica, Arial, Sans-Serif;
+	text-decoration: none!important;
+	vertical-align: middle;
+	margin-right: 5px;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+   }
+ 
+  
+.button:hover {
+   border-top-color: #28597a;
+   background: #28597a;
+   color: #ccc;
+   }
+.button:active {
+   border-top-color: #1b435e;
+   background: #1b435e;
+   }
+   
+ .button2 {
+	background: #92e2fd;
+	padding: 5px 10px;
+	-webkit-border-radius: 0px;
+	-moz-border-radius: 0px;
+	border-radius: 0px;
+	color: #294678;
+	font-size: 16px;
+	text-decoration: none;
+	vertical-align: middle;
+	font-weight: bold;	
+   }
+.button2:hover {
+	border-top-color: #28597a;
+	background: #fff;
+	border-left-color: #28597a;
+   }
+.button2:active {
+   border-top-color: #1b435e;
+   background: #1b435e;
+   }  
+ 
+ .moveUpOnePx {margin-top:-1;}  
+   
+   
+ .container {padding:3px;}  
+   
+.hide {display:none!important;}   
+
+.gmnoprint {margin-top: 10px!important;}

@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@googlemaps/markermanager": "1.0.29",
+    "node": "^22.23.4",
+    "playwright-core": "^1.64.1"
+  }
+}

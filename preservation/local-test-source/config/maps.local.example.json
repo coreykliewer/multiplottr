@@ -1,0 +1,5 @@
+{
+  "enabled": false,
+  "allowBrowserNetwork": false,
+  "apiKey": "[REDACTED_CONFIG_VALUE]"
+}

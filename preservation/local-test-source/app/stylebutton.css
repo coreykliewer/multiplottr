@@ -1,0 +1,29 @@
+/* Local replacement for the missing legacy stylesheet; shared button styles remain in new.css. */
+body { font-family: Arial, sans-serif; }
+#localEnvironmentStatus { position: fixed; bottom: 12px; left: 12px; z-index: 99999; max-width: 420px; padding: 10px 14px; background: #fff8dc; border: 1px solid #b39335; border-radius: 5px; color: #3c3218; font: 13px/1.4 Arial, sans-serif; pointer-events: none; }
+.local-map-placeholder { position: absolute; top: 45%; left: 20%; right: 20%; text-align: center; font: 18px/1.5 Arial, sans-serif; color: #666; }
+@media print { #localEnvironmentStatus { display: none; } }
+
+/* Fit the real map and short legend into a single landscape print-preview page. */
+@page { size: A4 landscape; margin: 10mm; }
+@media print {
+  html, body { width: 277mm !important; height: auto !important; margin: 0 !important; overflow: visible !important; }
+  html body #mapContainer { position: relative !important; left: 0 !important; right: auto !important; top: 0 !important; bottom: auto !important; width: 277mm !important; height: 177mm !important; overflow: hidden !important; }
+  html body #map_canvas { width: 277mm !important; height: 160mm !important; position: relative !important; }
+  html body #printLegend { position: relative !important; top: auto !important; left: auto !important; right: auto !important; margin: 3mm 0 0 !important; font: 11px/1.4 Arial, sans-serif !important; }
+  html body #printLegend li { display: inline-block; margin: 0 5mm 1mm 0 !important; }
+}
+
+/* Match native print dimensions before opening preview so every plotted marker fits. */
+body.local-print-layout #map_canvas { width: 277mm !important; height: 160mm !important; }
+body.local-print-layout #mapContainer { width: 277mm !important; height: 177mm !important; top: 0 !important; left: 0 !important; right: auto !important; bottom: auto !important; }
+body.local-print-layout #introText, body.local-print-layout #mapLegend, body.local-print-layout #markerSelection, body.local-print-layout #topBannerNav, body.local-print-layout #quickSearch, body.local-print-layout #mapSettings { display: none !important; }
+
+.local-membership-panel { position: fixed; z-index: 100000; left: 8%; top: 6%; width: 76%; max-height: 84%; overflow: auto; padding: 20px; background: white; border: 2px solid #287ca8; box-shadow: 0 8px 32px #0005; font: 14px/1.4 Arial,sans-serif; }
+.local-membership-panel[hidden] { display:none!important; }
+.local-membership-panel label { display: inline-flex; flex-direction: column; margin: 6px 12px 6px 0; min-width: 150px; }
+.local-membership-panel input,.local-membership-panel textarea,.local-membership-panel select { font: inherit; padding: 6px; border:1px solid #aaa; }
+.local-membership-panel textarea { min-width:260px; min-height:45px; }
+.local-membership-panel button,#myMapsBox button { padding:8px 12px; margin:6px; cursor:pointer; }
+.local-marker-row { margin: 12px 0; }
+@media print { .local-membership-panel { display:none!important; } }

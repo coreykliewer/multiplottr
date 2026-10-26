@@ -1,0 +1,243 @@
+@charset "utf-8";
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+textarea, pre {
+	margin: 0;
+	padding: 0;
+	outline: 0;
+	border: 0;
+}
+textarea, input {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+textarea:focus, input:focus {
+	outline: none;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+
+
+#shareLocationBox {display:none; padding:5px; padding-right:12px; margin-bottom:10px;}
+#shareLocationBox h2 {margin-bottom:10px;}
+
+
+
+
+body {
+	line-height: 1;
+}
+
+#printLegend {
+display:none;}
+
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after, q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+textarea, div, form {
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+}
+a {
+	outline: 0;
+	color: #3a99d8;
+}
+a:hover {
+	text-decoration: none;
+}
+body {
+	font-family: 'hirukoregular', 'PT Sans', sans-serif;
+	background-color: #0a496a;
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+}
+
+
+table { 
+		width: 100%; 
+		border-collapse: collapse; 
+	}
+	/* Zebra striping */
+	tr:nth-of-type(odd) { 
+		background: #ecf0f1; 
+	}
+	th { 
+		background: #46484a; 
+		color: white; 
+		font-weight: bold; 
+		text-transform: uppercase;
+	}
+	td, th { 
+		padding: 6px; 
+		text-align: left; 
+	}
+
+
+pre {
+ white-space: pre-wrap;       /* css-3 */
+ white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+ white-space: -pre-wrap;      /* Opera 4-6 */
+ white-space: -o-pre-wrap;    /* Opera 7 */
+ word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+
+
+
+
+#mobilNav {display:none; }
+
+#introText, #myMapsBox, #contactUsBox, #userAccountBox, #markerSelection, #topBannerNav, #modalBack, #overMapAdContainer {
+	display: none;
+}
+
+#mapContainer {
+	position: absolute;
+	left: 0;
+	right: 0px;
+	background-color: #90b8cc;
+	top: 0px;
+	bottom: 0px;
+}
+
+.infoBox {
+	padding: 10px;
+	width: 250px!important;
+	font-size: 1em;
+}
+
+
+
+.infoBox img {
+	max-width: 175px;
+	height: auto;
+	margin-bottom: .5em;
+}
+.infoBoxWrapAlert {
+	border: 5px solid #990000;
+}
+.infoBoxWrap {
+	border: 5px solid #00a8dc;
+		font-size:1.2em!important;
+
+}
+.infoBoxWrap, .infoBoxWrapAlert {
+	padding: 5px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;/*IE 7 AND 8 DO NOT SUPPORT BORDER RADIUS*/
+	background-repeat: no-repeat;
+	background-position: center bottom;
+	background-color: #FFF;
+	-webkit-box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.25);
+	-moz-box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.25);
+	box-shadow: 0px 0px 10px rgba(50, 50, 50, 0.25);
+	
+}
+.infoBoxWrap .buttonHolder, .infoBoxWrapAlert .buttonHolder {
+	padding-top: 10px;
+	
+}
+.infoBoxWrap .button, .infoBoxWrapAlert .button {
+	font-size: 90%;
+}
+
+.infoBoxWrap .icon {
+	float: none;
+	display: inline-block;
+	clear: none;
+	color: #f59a19;
+	margin-right:3px;
+	font-size:1.2em!important;
+}
+
+.infoBoxWrapAlert input[type=text] {
+	font-size: 100%;
+	width: 100%;
+}
+.editWrap {
+	border: 5px solid #ECA613!important;
+}
+.infoBoxWrap h1 {
+	font-size: 1.1em;
+	font-weight: bolder;
+	margin-bottom: .5em;
+}
+
+.infoWinEditOptions {
+	/*display:none!important;*/
+}
+
+.infoBoxWrap .buttonHolder span {
+	color: #f59a19;
+	}
+
+.infoBoxWrap a {
+	color: #007DB2;
+	text-decoration: underline;
+}
+.infoBoxWrap a:hover {
+	color: #999;
+}
+.infoBoxWrap em {
+	font-style: italic;
+}
+.infoBoxWrap strong {
+	font-weight: bold;
+}
+.infoBoxWrap ul, .infoBoxWrap ol {
+	margin-left: .5em;
+}
+.infoBoxWrap ul li {
+	list-style-type: disc;
+	list-style-position: inside;
+}
+.infoBoxWrap ol li {
+	list-style-position: inside;
+	list-style-type: decimal;
+}
+.infoBoxWrap .buttonHolder {
+	margin-top: 5px;
+	font-size: 12px;
+	display: block;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.triangle {
+	width: 0;
+	height: 0;
+	border-left: 0px solid transparent;
+	border-right: 20px solid transparent;
+	border-top: 20px solid #00a8dc;
+	margin-left: auto;
+	margin-right: auto;
+}
+.editTriangle {
+	border-top: 20px solid #ECA613!important;
+}
+
+.infoBoxButtons {display:none!important;}

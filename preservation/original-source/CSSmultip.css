@@ -1,0 +1,137 @@
+#map {
+	border: 0px solid #000000;
+	
+}
+html {
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	margin: 0px;
+	padding: 0px;
+}
+
+/* v\:* {
+      behavior:url(#default#VML);
+    }*/
+	
+	.loadcontainer {
+	position:absolute;
+  width:400px;
+  margin:-100px 0px 0px -200px;
+  top: 50%; 
+  left: 50%;
+  text-align: center;
+  padding: 0px;
+  overflow: auto;
+}
+.infoWindowDiv {
+	font-family: Arial;
+	font-size: 10pt;
+	width: 200px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+
+.infoWindowDiv a.nav {
+	background-color: #DDE6EE;
+	font-size: 0.9em;
+	text-decoration: none;
+	padding-top: 0px;
+	padding-right: 3px;
+	padding-bottom: 0px;
+	padding-left: 3px;
+	color: #003A51;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #D6E1EB;
+	border-right-color: #7499BA;
+	border-bottom-color: #7499BA;
+	border-left-color: #D6E1EB;
+	line-height: 1.5em;
+	width: 175px;
+	display: block;
+	background-image: url(images/bluebak.gif);
+}
+
+.infonav {
+	list-style-type: none;
+	margin-left: 0px;
+	padding: 0px;
+}
+
+li {
+	margin-top: 0.5em;
+}
+.infoWindowDiv a.nav:hover {
+	background-color: #7499BA;
+	font-size: 0.9em;
+	text-decoration: none;
+	padding-top: 0px;
+	padding-right: 3px;
+	padding-bottom: 0px;
+	padding-left: 3px;
+	color: #FFFFFF;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #365470;
+	border-right-color: #7499BA;
+	border-bottom-color: #7499BA;
+	border-left-color: #365470;
+	line-height: 1.5em;
+	width: 175px;
+	display: block;
+	background-image: url(images/bluebak-hover.gif);
+}
+
+.infoWindowDiv p {
+	margin-top: 0px;
+	margin-bottom: .5em;
+}
+
+.formfields {
+	margin-right: 5px;
+	font-family: "Trebuchet MS", Helvetica, Arial;
+	font-size: .9em;
+	margin-bottom: .5em;
+
+}
+
+.formfieldstextarea {
+	margin-right: 5px;
+	font-family: "Trebuchet MS", Helvetica, Arial;
+	font-size: .9em;
+	width: 185px;
+	display: block;
+	margin-bottom: .5em;
+}
+
+.popupMessage {
+	background-color: #ECE9D8;
+	display: block;
+	padding: 10px;
+	width: 200px;
+	border: 1px solid #ACA899;
+	position: absolute;
+	z-index: 100;
+}
+
+.smallLink {
+	font-size: .8em;
+	color: #000066;
+}
+
