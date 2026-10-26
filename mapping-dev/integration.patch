@@ -1,0 +1,32 @@
+diff --git a/local-test/local-membership.php b/local-test/local-membership.php
+--- a/local-test/local-membership.php
++++ b/local-test/local-membership.php
+@@ -3,3 +3,5 @@
+ class LocalMembership {
+     private $db;
++    // Local document slice reuses only synthetic identity/connection, never the old validator.
++    public function documentDatabase() { return $this->db; }
+     public function __construct() {
+diff --git a/local-test/router.php b/local-test/router.php
+--- a/local-test/router.php
++++ b/local-test/router.php
+@@ -22,4 +22,19 @@
+ require_once '/config/local-membership.php';
++if (strpos($path, '/__local_documents/') === 0) {
++    if (!in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost:8080','127.0.0.1:8080'],true)) LocalMembership::respond(403,['error'=>'Local host required']);
++    require_once '/app/mapping-dev/document-service.php';
++    $member = new LocalMembership();
++    (new MappingDocuments($member->documentDatabase()))->dispatch($path,$member);
++}
++if ($path === '/mapping/' || strpos($path, '/mapping/') === 0) {
++    $relative = $path === '/mapping/' ? 'index.html' : substr($path,strlen('/mapping/'));
++    $asset = realpath('/app/mapping-dev/'.$relative);
++    $base = realpath('/app/mapping-dev');
++    $types=['html'=>'text/html; charset=utf-8','js'=>'text/javascript; charset=utf-8','css'=>'text/css; charset=utf-8','svg'=>'image/svg+xml'];
++    $ext=strtolower(pathinfo($relative,PATHINFO_EXTENSION));
++    if(!$asset||!$base||strpos($asset,$base.'/')!==0||!isset($types[$ext])||!is_file($asset))LocalMembership::respond(404,['error'=>'Workspace asset not found']);
++    header('Content-Type: '.$types[$ext]);readfile($asset);return;
++}
+ if (strpos($path, '/__local_membership/') === 0) {
+     if (!in_array($_SERVER['HTTP_HOST'] ?? '', ['localhost:8080','127.0.0.1:8080'], true)) LocalMembership::respond(403,['error'=>'Local host required']);
+     (new LocalMembership())->dispatch($path);

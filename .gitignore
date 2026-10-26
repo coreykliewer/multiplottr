@@ -3,8 +3,10 @@
 !/.gitignore
 !/BASELINE-REVIEW.md
 !/UPGRADE-DECISIONS.md
+!/MAPPING-CONSISTENCY-PLAN.md
 !/BASELINE-PRESERVATION.md
 !/preservation/
+!/mapping-dev/
 
 # Apply even inside explicitly preserved source sets.
 **/node_modules/
