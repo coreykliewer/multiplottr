@@ -14,3 +14,6 @@
 @media print{#sidebarResize{display:none!important}main.sidebar-full>#mapArea{visibility:visible!important;overflow:visible!important}}
 
 .save-action button{white-space:pre-line}
+
+/* Map-side background and open sidebar panels. */
+#mapArea,#map{background:#9AD1F4}main>aside details[open]{background:#fff}
