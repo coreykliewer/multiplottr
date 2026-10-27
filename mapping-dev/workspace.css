@@ -16,4 +16,4 @@
 .save-action button{white-space:pre-line}
 
 /* Blue sidebar with white expanded sections. */
-main>aside{background:#9AD1F4}main>aside details[open]{background:#fff;border-radius:3px;padding:10px}main>aside details:not([open]){background:transparent}
+main>aside{background:#BFE1F7}main>aside details[open]{background:#fff;border-radius:3px;padding:10px}main>aside details:not([open]){background:transparent}
