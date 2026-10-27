@@ -27,3 +27,5 @@ main>aside{background:#E2F3FD}main>aside details[open]{background:#fff;border-ra
 #marker{background:#fff}
 
 .description-field:has(> #descriptionEdit:hover) > #descriptionPreview{background:#f5f5f5}
+
+#plotDefaults{font-size:14px}#plotDefaults input,#plotDefaults select,#plotDefaults textarea,#plotDefaults button{font-size:inherit}
