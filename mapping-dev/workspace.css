@@ -25,3 +25,5 @@ main>aside{background:#E2F3FD}main>aside details[open]{background:#fff;border-ra
 #descriptionEdit:not([hidden]){display:block;width:auto;margin:4px 0 6px auto;padding:4px 10px;font-size:12px}
 
 #marker{background:#fff}
+
+.description-field:has(> #descriptionEdit:hover) > #descriptionPreview{background:#f5f5f5}
