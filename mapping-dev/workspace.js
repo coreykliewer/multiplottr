@@ -41,6 +41,7 @@
  const recover=document.createElement('button');recover.id='recover';recover.textContent='Download preserved document';recover.onclick=()=>{const blob=new Blob([JSON.stringify(state.document,null,2)],{type:'application/json'}),href=URL.createObjectURL(blob),a=document.createElement('a');a.href=href;a.download='map-document.json';a.click();setTimeout(()=>URL.revokeObjectURL(href),1000);};document.querySelector('nav').append(recover);
  window.addEventListener('beforeunload',e=>{if(state.dirty){e.preventDefault();e.returnValue='';}});window.addEventListener('pageshow',e=>{if(e.persisted)session().catch(()=>notice('Session revalidation failed.'));});document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&state.user)session().catch(()=>notice('Session revalidation failed.'));});document.addEventListener('click',e=>{const a=e.target.closest('a');if(a&&new URL(a.href,location.href).origin!==location.origin){e.preventDefault();notice('External navigation is blocked.');}});
  $('maps').addEventListener('toggle',()=>{if($('maps').open)list();});
+ $('plotAddresses').addEventListener('click',()=>{$('maps').open=false;$('mapDetails').open=false;});
  window.MappingWorkspace={state,selectDocument,save,openSaved,startMaps,render,inspect:()=>M.inspect(state.document)};
  (async()=>{forms();const initialId=new URL(location.href).searchParams.get('map');try{await session();if(initialId)await openSaved(initialId);}catch(e){notice('Local account could not load.');}await startMaps();})();
 })();
