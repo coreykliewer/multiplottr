@@ -23,3 +23,5 @@ main>aside{background:#E2F3FD}main>aside details[open]{background:#fff;border-ra
 .description-preview{padding:8px 0;overflow-wrap:anywhere}.description-preview img{max-width:100%}#descriptionEdit,#descriptionDone{margin:6px 0}
 
 #descriptionEdit:not([hidden]){display:block;width:auto;margin:4px 0 6px auto;padding:4px 10px;font-size:12px}
+
+#marker{background:#fff}
