@@ -17,3 +17,5 @@
 
 /* Blue sidebar with white expanded sections. */
 main>aside{background:#E2F3FD}main>aside details[open]{background:#fff;border-radius:3px;padding:10px}main>aside details:not([open]){background:transparent}
+
+.description-field{margin:8px 0}#descriptionToolbar{display:flex;flex-wrap:wrap;gap:4px;padding:5px;background:#f0f0f0;border:1px solid #999;border-bottom:0}#descriptionToolbar button{padding:5px 8px}#descriptionEditor{min-height:120px;padding:8px;border:1px solid #999;background:#fff;overflow-wrap:anywhere}#descriptionEditor:focus-visible{outline:3px solid #0076bb;outline-offset:1px}#descriptionEditor[aria-readonly=true]{background:#f3f3f3}#descriptionEditor img{max-width:100%}

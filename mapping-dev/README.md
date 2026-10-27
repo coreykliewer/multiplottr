@@ -6,6 +6,8 @@ Implemented 2026-10-26 on branch `mapping-consistency-phase1`. This is a separat
 
 Resize the desktop sidebar by dragging its left divider. Double-click the divider to toggle full width and the 360-pixel minimum. Width is remembered in this browser. The divider also supports Left/Right arrow keys, Home (minimum) and End (full width). Mobile keeps the stacked layout.
 
+**Map Description** now has a local visual editor with bold, italic, headings, paragraphs and bulleted/numbered lists. Select text and choose a formatting button, or use Ctrl+B/Ctrl+I. Formatting is part of the map document and uses the existing Save Map workflow. Unsupported original markup remains recoverable and read-only; unsupported pasted formatting/media is rejected with a message rather than silently stripped. No external editor service is loaded.
+
 1. Open `http://localhost:8080/mapping/` while the existing local Docker environment is running. Current development-key configuration is reused without displaying it.
 2. Expand **Local test account**. Use an existing synthetic account, or enter a unique username such as `local_demo_corey` and your own password of at least 12 characters, then click **Create synthetic account**. These accounts are local only; do not enter production credentials.
 3. Click **New Map**, then plot addresses or use **Place a Marker**. The developer sample buttons have been removed from the interface; synthetic fixtures remain available to automated tests.
