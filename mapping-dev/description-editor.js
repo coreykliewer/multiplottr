@@ -42,6 +42,7 @@
  });
  return {
   render(content){const value=content?.value||'';protectedContent=content?.format==='html'&&!supported(value);readOnly();if(document.activeElement===editor&&source.value===editor.innerHTML)return;if(content?.format==='html'&&!protectedContent){if(editor.innerHTML!==value)editor.innerHTML=value;}else if(editor.textContent!==value)editor.textContent=value;},
+  isReadOnly(){return locked;},
   setReadOnly(value){globalLocked=value;readOnly();}
  };
  }
