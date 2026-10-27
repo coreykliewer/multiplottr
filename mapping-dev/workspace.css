@@ -3,3 +3,5 @@
 .marker-action{display:block;margin:12px 0}
 
 #sidebarActions{padding:0 0 12px;background:transparent;justify-content:flex-end}.save-action{margin:12px 0}.save-action button{width:100%}
+
+#mapList{list-style:none;padding:0;margin:0}.saved-map-row{display:flex;gap:6px;margin:6px 0;width:100%}.saved-map-name{flex:1;min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:left}.saved-map-delete{flex:0 0 36px;align-self:stretch}
