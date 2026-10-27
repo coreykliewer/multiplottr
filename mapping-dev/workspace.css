@@ -15,5 +15,5 @@
 
 .save-action button{white-space:pre-line}
 
-/* Map-side background and open sidebar panels. */
-#mapArea,#map{background:#9AD1F4}main>aside details[open]{background:#fff}
+/* Blue sidebar with white expanded sections. */
+main>aside{background:#9AD1F4}main>aside details[open]{background:#fff;border-radius:3px;padding:10px}main>aside details:not([open]){background:transparent}
