@@ -31,3 +31,5 @@ main>aside{background:#E2F3FD}main>aside details[open]{background:#fff;border-ra
 #plotDefaults{font-size:12px}#plotDefaults input,#plotDefaults select,#plotDefaults textarea,#plotDefaults button{font-size:inherit}
 
 .marker-side-label{position:absolute;transform:translateY(-50%);white-space:nowrap;pointer-events:none;font: bold 12px Arial,sans-serif;color:#111;background:rgba(255,255,255,.9);padding:2px 4px;border-radius:2px}
+
+#plotDuplicate{max-width:460px;border:1px solid #777;border-radius:5px;padding:20px}#plotDuplicate::backdrop{background:rgba(0,0,0,.35)}.duplicate-actions{display:flex;flex-wrap:wrap;gap:8px}#plotResultList{font-size:12px;padding-left:20px}#addresses[readonly]{background:#f3f3f3}

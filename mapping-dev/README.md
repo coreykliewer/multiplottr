@@ -21,6 +21,8 @@ New Map confirms discarding unsaved changes and starts a new identity. Save fail
 
 Under **Plot Addresses → New marker defaults**, select Style, Color, Size, and Group before plotting. These defaults apply to subsequent address batches and placed markers, leaving existing markers unchanged. Add any new group in **Legend** first, then select it in the defaults. Save Map preserves these defaults for reopening. A hidden group is labeled `(hidden)` with a warning; without explicit defaults, the first visible group is preferred.
 
+The address box is a queue: successfully plotted entries are removed as they finish; failed, ambiguous, partial-match and timed-out entries remain for correction/retry. Plot is disabled and the box is read-only while a batch runs. The summary reports plotted, attention-needed and skipped counts. A matching existing address or near-identical coordinates opens a choice: **Skip** removes that queue entry without another marker; **Plot another marker** explicitly permits the duplicate. These are potential-match checks, not fuzzy address matching. **Stop plotting**, **Stop batch** or Escape at a duplicate prompt keeps completed markers and unprocessed addresses. Switching to another map cancels the old batch and clears its input; late callbacks cannot change the newly opened map. Pending queue text is not durable saved-map data.
+
 ## What is editable
 
 - One SVG-pin-based client renderer for draft, saved, reopened and edited documents. It retains the preferred pin silhouette and incorporates popup editing, dragging, keyboard-accessible location buttons, group visibility and settings.
