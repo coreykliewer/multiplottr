@@ -21,3 +21,5 @@ main>aside{background:#E2F3FD}main>aside details[open]{background:#fff;border-ra
 .description-field{margin:8px 0}.description-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:5px;background:#f0f0f0;border:1px solid #999;border-bottom:0}.description-toolbar button{padding:5px 8px}.visual-description-editor{min-height:120px;padding:8px;border:1px solid #999;background:#fff;overflow-wrap:anywhere}.visual-description-editor:focus-visible{outline:3px solid #0076bb;outline-offset:1px}.visual-description-editor[aria-readonly=true]{background:#f3f3f3}.visual-description-editor img{max-width:100%}
 
 .description-preview{padding:8px 0;overflow-wrap:anywhere}.description-preview img{max-width:100%}#descriptionEdit,#descriptionDone{margin:6px 0}
+
+#descriptionEdit{display:block;width:auto;margin:4px 0 6px auto;padding:4px 10px;font-size:12px}
