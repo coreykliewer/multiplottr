@@ -7,3 +7,9 @@
 #mapList{list-style:none;padding:0;margin:0}.saved-map-row{display:flex;gap:6px;margin:6px 0;width:100%}.saved-map-name{flex:1;min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:left}.saved-map-delete{flex:0 0 36px;align-self:stretch}
 
 #sidebarActions #new{width:100%;flex:1 1 100%}
+
+/* Desktop sidebar resizing; mobile retains the stacked map-first layout. */
+@media screen and (min-width:751px){main{grid-template-columns:minmax(0,1fr) 8px var(--sidebar-width,360px);grid-template-areas:"map resize controls"}main>aside{min-width:0}#sidebarResize{grid-area:resize;background:#ccc;cursor:ew-resize;touch-action:none;position:relative}#sidebarResize:hover,#sidebarResize:focus-visible{background:#0076bb;outline:2px solid #0076bb;outline-offset:-2px}#sidebarResize::after{content:"";position:absolute;top:45%;left:2px;width:4px;height:32px;border-left:1px solid #777;border-right:1px solid #777}main.sidebar-full>#mapArea{visibility:hidden;overflow:hidden}.sidebar-resizing,.sidebar-resizing *{cursor:ew-resize!important;user-select:none!important}}
+#sidebarSizeControls{display:flex;width:100%;gap:8px}#sidebarSizeControls button{flex:1}
+@media screen and (max-width:750px){#sidebarResize,#sidebarSizeControls{display:none}}
+@media print{#sidebarResize,#sidebarSizeControls{display:none!important}main.sidebar-full>#mapArea{visibility:visible!important;overflow:visible!important}}

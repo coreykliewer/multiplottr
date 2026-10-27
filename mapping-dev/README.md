@@ -4,6 +4,8 @@ Implemented 2026-10-26 on branch `mapping-consistency-phase1`. This is a separat
 
 ## Try it
 
+Resize the desktop sidebar by dragging its left divider. **Expand** fills the workspace; **Minimize** restores a 360-pixel sidebar. Width is remembered in this browser. The divider also supports Left/Right arrow keys, Home (minimum) and End (full width). Mobile keeps the stacked layout.
+
 1. Open `http://localhost:8080/mapping/` while the existing local Docker environment is running. Current development-key configuration is reused without displaying it.
 2. Expand **Local test account**. Use an existing synthetic account, or enter a unique username such as `local_demo_corey` and your own password of at least 12 characters, then click **Create synthetic account**. These accounts are local only; do not enter production credentials.
 3. Click **Load synthetic sample** to see numbered/colored/small pins, a local custom image, labels, rich descriptions, groups, and line/polygon/circle geometry. Two locations intentionally share coordinates. Use the location list to select overlapping markers.
