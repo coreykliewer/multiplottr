@@ -29,6 +29,11 @@
   const s=d.settings;
   if(!s||!Number.isFinite(s.center?.lat)||Math.abs(s.center.lat)>90||!Number.isFinite(s.center?.lng)||Math.abs(s.center.lng)>180||![s.zoom,s.minZoom,s.maxZoom].every(Number.isInteger)||s.minZoom<0||s.maxZoom>22||s.minZoom>s.zoom||s.zoom>s.maxZoom||!['zoomControl','mapTypeControl','legendVisible'].every(k=>typeof s[k]==='boolean'))errors.push('Invalid camera or zoom/control settings');
   if(s?.mapType!=='roadmap')readonly.push('Only road map is enabled in this local slice');
+  if(s&&Object.prototype.hasOwnProperty.call(s,'plotDefaults')){
+   const p=s.plotDefaults,a=p?.appearance;
+   if(!p||!groupIds.has(p.groupId))errors.push('Invalid new-marker default group');
+   if(!a||!['pin','number','image'].includes(a.kind)||!['normal','small'].includes(a.size)||!(colors.includes(a.color)||/^#[a-f0-9]{6}$/i.test(a.color||''))||(a.kind==='image'&&!/^\/mapping\/assets\/[a-z0-9-]+\.svg$/i.test(a.icon||'')))readonly.push('Unsupported new-marker default appearance retained');
+  }
   d.geometry.forEach(g=>{if(!['LineString','Polygon','Circle'].includes(g?.type))readonly.push('Unsupported geometry retained');else if(g.type==='Circle'){if(!Number.isFinite(g.center?.lat)||Math.abs(g.center.lat)>90||!Number.isFinite(g.center?.lng)||Math.abs(g.center.lng)>180||!Number.isFinite(g.radiusMeters)||g.radiusMeters<=0)errors.push('Invalid circle');}else{const rings=g.type==='Polygon'?g.coordinates:[g.coordinates];if(!Array.isArray(rings)||!rings.length||!rings.every(r=>Array.isArray(r)&&r.length>1&&r.every(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)&&Math.abs(p[0])<=180&&Math.abs(p[1])<=90)))errors.push('Invalid geometry coordinates');}});
   if(d.compatibility?.unsupported?.length)readonly.push(...d.compatibility.unsupported);
   return {errors:[...new Set(errors)],readonly:[...new Set(readonly)]};

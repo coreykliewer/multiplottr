@@ -32,6 +32,11 @@ class MappingDocuments {
         if(!$coordinate($s['center']??null)||!is_int($s['zoom']??null)||!is_int($s['minZoom']??null)||!is_int($s['maxZoom']??null)||$s['minZoom']<0||$s['maxZoom']>22||$s['minZoom']>$s['zoom']||$s['zoom']>$s['maxZoom'])$errors[]='Invalid camera settings';
         foreach(['zoomControl','mapTypeControl','legendVisible'] as $k)if(!is_bool($s[$k]??null))$errors[]='Invalid control settings';
         if(($s['mapType']??null)!=='roadmap')$ro[]='Unsupported map type retained';
+        if(array_key_exists('plotDefaults',$s)){
+            $p=$s['plotDefaults'];$a=$p['appearance']??[];
+            if(!is_array($p)||!is_string($p['groupId']??null)||!isset($groups[$p['groupId']]))$errors[]='Invalid new-marker default group';
+            if(!in_array($a['kind']??null,['pin','number','image'],true)||!in_array($a['size']??null,['normal','small'],true)||(!in_array($a['color']??null,['RED','GREEN','BLUE','ORANGE','YELLOW','GREY','LIME','CYAN','VIOLET','PURPLE','BLACK','WHITE','PINK'],true)&&!preg_match('/^#[a-f0-9]{6}$/i',$a['color']??''))||(($a['kind']??'')==='image'&&!preg_match('#^/mapping/assets/[a-z0-9-]+\.svg$#i',$a['icon']??'')))$ro[]='Unsupported new-marker default appearance retained';
+        }
         foreach($d['geometry'] as $g){
             if(!in_array($g['type']??null,['LineString','Polygon','Circle'],true)){$ro[]='Unsupported geometry retained';continue;}
             if($g['type']==='Circle'){if(!$coordinate($g['center']??null)||!$number($g['radiusMeters']??null)||$g['radiusMeters']<=0)$errors[]='Invalid circle';}
@@ -45,7 +50,7 @@ class MappingDocuments {
     private static function extras($old,$new){
         if(is_object($old)){
             if(!is_object($new))return false;
-            $known=explode(' ','schemaVersion id title description locations groups geometry settings extensions compatibility name originalAddress coordinates appearance groupId format value kind color size label icon visible center lat lng zoom minZoom maxZoom mapType zoomControl mapTypeControl legendVisible type radiusMeters');
+            $known=explode(' ','schemaVersion id title description locations groups geometry settings plotDefaults extensions compatibility name originalAddress coordinates appearance groupId format value kind color size label icon visible center lat lng zoom minZoom maxZoom mapType zoomControl mapTypeControl legendVisible type radiusMeters');
             foreach(get_object_vars($old) as $k=>$v){if($k==='extensions'||$k==='compatibility'||!in_array($k,$known,true)){if(!property_exists($new,$k)||json_encode($new->$k)!==json_encode($v))return false;}elseif(property_exists($new,$k)&&!self::extras($v,$new->$k))return false;}
         }elseif(is_array($old)&&is_array($new)){foreach($old as $i=>$v){if(is_object($v)&&isset($v->id)){foreach($new as $candidate)if(is_object($candidate)&&($candidate->id??null)===$v->id&&!self::extras($v,$candidate))return false;}elseif(isset($new[$i])&&!self::extras($v,$new[$i]))return false;}}
         return true;

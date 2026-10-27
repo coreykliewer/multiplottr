@@ -17,6 +17,8 @@ Resize the desktop sidebar by dragging its left divider. Double-click the divide
 
 New Map confirms discarding unsaved changes and starts a new identity. Save failures/conflicts keep the current draft; they do not auto-reload or silently overwrite a newer revision. Download the preserved document before intentionally discarding a draft. Drafts are held in memory, not a durable browser crash-recovery store. Automatic conflict merging and importing recovery JSON are not implemented.
 
+Under **Plot Addresses → New marker defaults**, select Style, Color, Size, and Group before plotting. These defaults apply to subsequent address batches and placed markers, leaving existing markers unchanged. Add any new group in **Legend** first, then select it in the defaults. Save Map preserves these defaults for reopening. A hidden group is labeled `(hidden)` with a warning; without explicit defaults, the first visible group is preferred.
+
 ## What is editable
 
 - One SVG-pin-based client renderer for draft, saved, reopened and edited documents. It retains the preferred pin silhouette and incorporates popup editing, dragging, keyboard-accessible location buttons, group visibility and settings.
