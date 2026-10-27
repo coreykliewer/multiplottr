@@ -1,14 +1,15 @@
 (function(){
  'use strict';
- const source=document.getElementById('description'),editor=document.getElementById('descriptionEditor'),toolbar=document.getElementById('descriptionToolbar');
+ function createEditor(sourceId,editorId,toolbarId){
+ const source=document.getElementById(sourceId),editor=document.getElementById(editorId),toolbar=document.getElementById(toolbarId);
  let locked=false,globalLocked=false,protectedContent=false;
- const hint=document.createElement('p');hint.id='descriptionEditorHint';hint.hidden=true;editor.after(hint);
+ const hint=document.createElement('p');hint.id=editorId+'Hint';hint.hidden=true;editor.after(hint);
  function supported(html){if(!MapDocument.safeHtml(html))return false;const parsed=new DOMParser().parseFromString(html,'text/html');return [...parsed.body.querySelectorAll('*')].every(el=>[...el.attributes].every(a=>(el.tagName==='A'&&a.name==='href')||(el.tagName==='IMG'&&['src','alt'].includes(a.name)))&&(!(el.tagName==='IMG')||/^\/mapping\/assets\/[a-z0-9-]+\.svg$/i.test(el.getAttribute('src')||'')));}
  function readOnly(){locked=globalLocked||protectedContent;editor.contentEditable=locked?'false':'true';editor.setAttribute('aria-readonly',String(locked));toolbar.querySelectorAll('button').forEach(b=>b.disabled=locked);hint.hidden=!protectedContent;hint.textContent='Original description retained. Unsupported markup is read-only in this visual editor.';}
  function notice(text){document.getElementById('status').textContent=text;}
  function range(){const selection=window.getSelection();if(selection.rangeCount&&editor.contains(selection.getRangeAt(0).commonAncestorContainer))return selection.getRangeAt(0);editor.focus();const r=document.createRange();r.selectNodeContents(editor);r.collapse(false);selection.removeAllRanges();selection.addRange(r);return r;}
  function insert(node){const r=range(),last=node.nodeType===Node.DOCUMENT_FRAGMENT_NODE?node.lastChild:node;if(!last)return;r.deleteContents();r.insertNode(node);r.setStartAfter(last);r.collapse(true);const selection=getSelection();selection.removeAllRanges();selection.addRange(r);}
- function changed(){if(locked)return;source.value=editor.innerHTML;source.dispatchEvent(new Event('change',{bubbles:true}));}
+ function changed(){if(locked)return;source.value=editor.innerHTML;source.dataset.visualEdited='true';source.dispatchEvent(new Event('change',{bubbles:true}));}
  function command(format){if(locked)return;editor.focus();const r=range();
   if(['h2','p','ul','ol'].includes(format)){
    let top=r.commonAncestorContainer;while(top!==editor&&top.parentNode!==editor)top=top.parentNode;
@@ -39,8 +40,11 @@
   else {const fragment=document.createDocumentFragment();text.split(/\r?\n/).forEach((line,i)=>{if(i)fragment.append(document.createElement('br'));fragment.append(document.createTextNode(line));});insert(fragment);}
   changed();
  });
- window.DescriptionEditor={
+ return {
   render(content){const value=content?.value||'';protectedContent=content?.format==='html'&&!supported(value);readOnly();if(document.activeElement===editor&&source.value===editor.innerHTML)return;if(content?.format==='html'&&!protectedContent){if(editor.innerHTML!==value)editor.innerHTML=value;}else if(editor.textContent!==value)editor.textContent=value;},
   setReadOnly(value){globalLocked=value;readOnly();}
  };
+ }
+ window.DescriptionEditor=createEditor('description','descriptionEditor','descriptionToolbar');
+ window.MarkerDescriptionEditor=createEditor('note','markerDescriptionEditor','markerDescriptionToolbar');
 })();
