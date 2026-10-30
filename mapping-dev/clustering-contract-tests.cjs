@@ -13,6 +13,6 @@ assert.equal(M.fromLegacy('~1,2|Hello|RED|Locations').settings.clusterMarkers,fa
 const old=M.create(),next=M.copy(old);next.settings.clusterMarkers=false;old.extensions={keep:{value:1}};next.extensions=M.copy(old.extensions);
 const data=Buffer.from(JSON.stringify({cases,old,next})).toString('base64');
 const php=`require '/app/mapping-dev/document-service.php';$data=json_decode(base64_decode('${data}'));$results=[];foreach($data->cases as $case){list($errors,$readonly)=MappingDocuments::inspect($case->document);$results[]=['label'=>$case->label,'valid'=>count($errors)===0];}$method=new ReflectionMethod('MappingDocuments','extras');$method->setAccessible(true);$toggle=$method->invoke(null,$data->old,$data->next);unset($data->next->extensions->keep);$dropsUnknown=$method->invoke(null,$data->old,$data->next);echo json_encode(['results'=>$results,'toggle'=>$toggle,'dropsUnknown'=>$dropsUnknown]);`;
-const server=JSON.parse(cp.execFileSync('docker',['exec','multiplottr-local-web-1','php','-r',php],{encoding:'utf8'}));
+const server=JSON.parse(require('./test-support/php.cjs')(php));
 assert.deepEqual(server.results,cases.map(c=>({label:c.label,valid:c.valid})));assert.equal(server.toggle,true);assert.equal(server.dropsUnknown,false);
 console.log('PASS: pinned official library integrity; new/legacy defaults; optional setting validation in JS/PHP; toggles allowed and unknown data preserved.');

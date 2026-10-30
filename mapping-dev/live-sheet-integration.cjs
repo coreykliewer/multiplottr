@@ -1,14 +1,14 @@
 // Live Google Sheets integration: no response fulfillment, substituted CSV, or geocoder doubles.
-const {chromium}=require('../local-test/browser-tools/node_modules/playwright-core');
 const assert=require('assert'),fs=require('fs'),crypto=require('crypto'),cp=require('child_process'),P=require('./public-sheet');
 const base='http://localhost:8080',statePath='local-test/live-sheet-state.json',sessionPath='local-test/live-sheet-session.json',mode=process.argv[2]||'baseline';
 const allowed=new Set(['maps.googleapis.com','maps.gstatic.com','mapsresources-pa.googleapis.com','fonts.googleapis.com','fonts.gstatic.com']);
 const policyFiles=['mapping-dev/public-sheet.js','mapping-dev/public-sheet-fetch.cjs','mapping-dev/public-sheet-fetch-server.cjs','local-test/router.php','local-test/config/maps.local.json'];
 const hash=b=>crypto.createHash('sha256').update(b).digest('hex'),policyHashes=()=>Object.fromEntries(policyFiles.map(p=>[p,hash(fs.readFileSync(p))]));
+if(mode==='baseline'&&!process.argv[3]){console.error('Live Google CSV verification is opt-in: provide a synthetic published CSV URL and optional tab ID.');process.exit(2);}
+const {chromium}=require('../local-test/browser-tools/node_modules/playwright-core');
 const beforePolicies=policyHashes(),results=[],http=[],errors=[],csp=[],outside=[],responseTasks=[];let browser,username,registered=false,retain=false;
 const clean=s=>String(s).replace(/AIza[\w-]+/g,'[KEY]');
 function cleanup(name){const code=fs.readFileSync('local-test/membership-cleanup.php','utf8');cp.execFileSync('docker',['exec','-i','-e','LOCAL_MEMBER_FIXTURES_B64='+Buffer.from(JSON.stringify([{username:name}])).toString('base64'),'multiplottr-local-web-1','php'],{input:code,encoding:'utf8'});}
-if(mode==='baseline'&&!process.argv[3]){console.error('Live Google CSV verification is opt-in: provide a synthetic published CSV URL and optional tab ID.');process.exit(2);}
 (async()=>{
  if(mode==='cleanup'){const prior=JSON.parse(fs.readFileSync(statePath,'utf8'));cleanup(prior.username);fs.unlinkSync(statePath);fs.unlinkSync(sessionPath);console.log('Cleaned only the retained live-sheet synthetic fixture.');return;}
  const prior=mode==='baseline'?null:JSON.parse(fs.readFileSync(statePath,'utf8'));retain=!!prior;if(prior)assert.deepEqual(beforePolicies,prior.policyHashes);

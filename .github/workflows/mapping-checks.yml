@@ -1,0 +1,36 @@
+name: Mapping checks
+on:
+  pull_request:
+  push:
+    branches: [main, mapping-scoped-engine-20261029]
+permissions:
+  contents: read
+jobs:
+  credential-free:
+    name: Node ${{ matrix.node }} / PHP schema and mapping checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22', '24']
+    defaults:
+      run:
+        working-directory: mapping-dev
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      - name: Install PHP CLI
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends php-cli
+          php --version
+      - name: Install declared test dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Syntax and credential-free regressions
+        run: npm run verify

@@ -1,8 +1,8 @@
 // Live failure-path probe. This does not stand in for a successful live CSV import.
-const {chromium}=require('../local-test/browser-tools/node_modules/playwright-core');
 const assert=require('assert'),fs=require('fs'),crypto=require('crypto'),cp=require('child_process');
 const origin='http://localhost:8080',provided=process.argv[2];
 if(!provided){console.error('Live Google unavailable-source verification is opt-in: provide the synthetic published CSV URL.');process.exit(2);}
+const {chromium}=require('../local-test/browser-tools/node_modules/playwright-core');
 const allowed=new Set(['maps.googleapis.com','maps.gstatic.com','mapsresources-pa.googleapis.com','fonts.googleapis.com','fonts.gstatic.com']);
 const results=[],http=[],failures=[],errors=[],offlineSdkErrors=[],violations=[],unexpected=[],username='local_probe_live_sheet_'+crypto.randomBytes(5).toString('hex');let browser,registered=false,offlineFaultStarted=false;
 const clean=s=>String(s).replace(/AIza[\w-]+/g,'[KEY]');

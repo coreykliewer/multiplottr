@@ -1,0 +1,11 @@
+{
+  "name": "multiplottr-mapping-checks",
+  "version": "0.0.0",
+  "private": true,
+  "engines": {"node": ">=22 <25"},
+  "scripts": {
+    "test": "node test-support/run-checks.cjs test",
+    "check": "node test-support/run-checks.cjs syntax",
+    "verify": "npm run check && npm test"
+  }
+}
