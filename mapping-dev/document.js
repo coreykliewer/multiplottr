@@ -3,7 +3,7 @@
  const copy=x=>JSON.parse(JSON.stringify(x));
  const random=typeof crypto!=='undefined'?crypto:require('crypto').webcrypto;
  const id=()=>Array.from(random.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');
- function create(){return {schemaVersion:1,id:id(),title:'New map',description:{format:'html',value:''},locations:[],groups:[{id:'default',name:'Locations',visible:true}],geometry:[],settings:{center:{lat:0,lng:0},zoom:2,minZoom:0,maxZoom:22,mapType:'roadmap',zoomControl:true,mapTypeControl:false,legendVisible:true},extensions:{}};}
+ function create(){return {schemaVersion:1,id:id(),title:'New map',description:{format:'html',value:''},locations:[],groups:[{id:'default',name:'Locations',visible:true}],geometry:[],settings:{center:{lat:0,lng:0},zoom:2,minZoom:0,maxZoom:22,mapType:'roadmap',zoomControl:true,mapTypeControl:false,legendVisible:true,shareWithLink:true},extensions:{}};}
  const colors=['RED','GREEN','BLUE','ORANGE','YELLOW','GREY','LIME','CYAN','VIOLET','PURPLE','BLACK','WHITE','PINK'];
  function safeHtml(value){return typeof value==='string'&&!/<\s*\/?\s*(?!h[1-3]\b|p\b|br\b|strong\b|b\b|em\b|i\b|ul\b|ol\b|li\b|a\b|img\b)[a-z][^>]*>/i.test(value)&&!/<[^>]*\s(?:on\w+|style|srcset|formaction)\s*=/i.test(value)&&!/(?:javascript|data|vbscript)\s*:/i.test(value)&&!/(?:href|src)\s*=\s*["']?(?:https?:|\/\/)/i.test(value)&&!/<img\b(?![^>]*\bsrc\s*=\s*["']\/mapping\/assets\/[^"']+["'])/i.test(value);}
  function inspect(d){
@@ -27,6 +27,7 @@
    if(a?.kind==='image'&&!/^\/mapping\/assets\/[a-z0-9-]+\.svg$/i.test(a.icon||''))readonly.push('Custom icon requires an approved local asset; original retained');
   });
   const s=d.settings;
+  if(s&&Object.prototype.hasOwnProperty.call(s,'shareWithLink')&&typeof s.shareWithLink!=='boolean')errors.push('Invalid sharing setting');
   if(!s||!Number.isFinite(s.center?.lat)||Math.abs(s.center.lat)>90||!Number.isFinite(s.center?.lng)||Math.abs(s.center.lng)>180||![s.zoom,s.minZoom,s.maxZoom].every(Number.isInteger)||s.minZoom<0||s.maxZoom>22||s.minZoom>s.zoom||s.zoom>s.maxZoom||!['zoomControl','mapTypeControl','legendVisible'].every(k=>typeof s[k]==='boolean'))errors.push('Invalid camera or zoom/control settings');
   if(s?.mapType!=='roadmap')readonly.push('Only road map is enabled in this local slice');
   if(s&&Object.prototype.hasOwnProperty.call(s,'plotDefaults')){

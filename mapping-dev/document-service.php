@@ -30,6 +30,7 @@ class MappingDocuments {
         }
         $s=$d['settings']??[];
         if(!$coordinate($s['center']??null)||!is_int($s['zoom']??null)||!is_int($s['minZoom']??null)||!is_int($s['maxZoom']??null)||$s['minZoom']<0||$s['maxZoom']>22||$s['minZoom']>$s['zoom']||$s['zoom']>$s['maxZoom'])$errors[]='Invalid camera settings';
+        if(array_key_exists('shareWithLink',$s)&&!is_bool($s['shareWithLink']))$errors[]='Invalid sharing setting';
         foreach(['zoomControl','mapTypeControl','legendVisible'] as $k)if(!is_bool($s[$k]??null))$errors[]='Invalid control settings';
         if(($s['mapType']??null)!=='roadmap')$ro[]='Unsupported map type retained';
         if(array_key_exists('plotDefaults',$s)){
@@ -46,17 +47,23 @@ class MappingDocuments {
         return [array_values(array_unique($errors)),array_values(array_unique($ro))];
     }
     private function read($id,$uid){$s=$this->db->prepare('SELECT revision,payload,create_hash FROM local_document_maps WHERE id=? AND owner_id=?');$s->bind_param('si',$id,$uid);$s->execute();$r=$s->get_result()->fetch_assoc();$s->close();return $r;}
-    private function result($row){$doc=json_decode($row['payload']);list($e,$ro)=self::inspect($doc);return ['document'=>$doc,'revision'=>(int)$row['revision'],'readonly'=>$ro];}
+    private function result($row,$canEdit=true){$doc=json_decode($row['payload']);list($e,$ro)=self::inspect($doc);return ['document'=>$doc,'revision'=>(int)$row['revision'],'readonly'=>$ro,'canEdit'=>$canEdit];}
     private static function extras($old,$new){
         if(is_object($old)){
             if(!is_object($new))return false;
-            $known=explode(' ','schemaVersion id title description locations groups geometry settings plotDefaults extensions compatibility name originalAddress coordinates appearance groupId format value kind color size label icon visible center lat lng zoom minZoom maxZoom mapType zoomControl mapTypeControl legendVisible type radiusMeters');
+            $known=explode(' ','schemaVersion id title description locations groups geometry settings plotDefaults extensions compatibility name originalAddress coordinates appearance groupId format value kind color size label icon visible center lat lng zoom minZoom maxZoom mapType zoomControl mapTypeControl legendVisible shareWithLink type radiusMeters');
             foreach(get_object_vars($old) as $k=>$v){if($k==='extensions'||$k==='compatibility'||!in_array($k,$known,true)){if(!property_exists($new,$k)||json_encode($new->$k)!==json_encode($v))return false;}elseif(property_exists($new,$k)&&!self::extras($v,$new->$k))return false;}
         }elseif(is_array($old)&&is_array($new)){foreach($old as $i=>$v){if(is_object($v)&&isset($v->id)){foreach($new as $candidate)if(is_object($candidate)&&($candidate->id??null)===$v->id&&!self::extras($v,$candidate))return false;}elseif(isset($new[$i])&&!self::extras($v,$new[$i]))return false;}}
         return true;
     }
     public function dispatch($path,$member){
         LocalMembership::session();$user=$member->user();$method=$_SERVER['REQUEST_METHOD'];
+        if($method==='GET'&&preg_match('#^/__local_documents/maps/([a-f0-9]{32})$#D',$path,$match)){
+            $stmt=$this->db->prepare('SELECT owner_id,revision,payload,create_hash FROM local_document_maps WHERE id=?');$stmt->bind_param('s',$match[1]);$stmt->execute();$row=$stmt->get_result()->fetch_assoc();
+            $owner=$row&&$user&&(int)$row['owner_id']===(int)$user['id'];$doc=$row?json_decode($row['payload']):null;
+            if(!$row||(!$owner&&($doc->settings->shareWithLink??false)!==true))LocalMembership::respond(404,['error'=>'Map not found or not shared']);
+            LocalMembership::respond(200,$this->result($row,(bool)$owner));
+        }
         if(!$user)LocalMembership::respond(401,['error'=>'Local synthetic sign-in required']);$uid=(int)$user['id'];
         if($method!=='GET'){
             if((isset($_SERVER['HTTP_ORIGIN'])&&$_SERVER['HTTP_ORIGIN']!=='http://'.($_SERVER['HTTP_HOST']??''))||!hash_equals($_SESSION['local_csrf'],$_SERVER['HTTP_X_LOCAL_CSRF']??''))LocalMembership::respond(403,['error'=>'Request verification failed']);
