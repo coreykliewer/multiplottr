@@ -3,7 +3,7 @@
  const copy=x=>JSON.parse(JSON.stringify(x));
  const random=typeof crypto!=='undefined'?crypto:require('crypto').webcrypto;
  const id=()=>Array.from(random.getRandomValues(new Uint8Array(16)),x=>x.toString(16).padStart(2,'0')).join('');
- function create(){return {schemaVersion:1,id:id(),title:'New map',description:{format:'html',value:''},locations:[],groups:[{id:'default',name:'Locations',visible:true}],geometry:[],settings:{center:{lat:0,lng:0},zoom:2,minZoom:0,maxZoom:22,mapType:'roadmap',zoomControl:true,mapTypeControl:false,legendVisible:true,shareWithLink:true},extensions:{}};}
+ function create(){return {schemaVersion:1,id:id(),title:'New map',description:{format:'html',value:''},locations:[],groups:[{id:'default',name:'Locations',visible:true}],geometry:[],settings:{center:{lat:0,lng:0},zoom:2,minZoom:0,maxZoom:22,mapType:'roadmap',zoomControl:true,mapTypeControl:false,legendVisible:true,clusterMarkers:true,shareWithLink:true},extensions:{}};}
  const colors=['RED','GREEN','BLUE','ORANGE','YELLOW','GREY','LIME','CYAN','VIOLET','PURPLE','BLACK','WHITE','PINK'];
  function safeHtml(value){return typeof value==='string'&&!/<\s*\/?\s*(?!h[1-3]\b|p\b|br\b|strong\b|b\b|em\b|i\b|ul\b|ol\b|li\b|a\b|img\b)[a-z][^>]*>/i.test(value)&&!/<[^>]*\s(?:on\w+|style|srcset|formaction)\s*=/i.test(value)&&!/(?:javascript|data|vbscript)\s*:/i.test(value)&&!/(?:href|src)\s*=\s*["']?(?:https?:|\/\/)/i.test(value)&&!/<img\b(?![^>]*\bsrc\s*=\s*["']\/mapping\/assets\/[^"']+["'])/i.test(value);}
  function inspect(d){
@@ -30,6 +30,7 @@
   if(connection!=null){const c=connection,a=c.defaults?.appearance;if(!/^[a-f0-9]{32}$/.test(c.id||'')||!/^https:\/\/docs\.google\.com\/spreadsheets\/d\/e\/[a-zA-Z0-9_-]{20,200}\/pub\?gid=\d{1,15}&single=true&output=csv$/.test(c.url||'')||!Array.isArray(c.headers)||c.headers.length>128||!c.headers.every(v=>typeof v==='string'&&v.length<=500)||!Array.isArray(c.mapping)||c.mapping.length>128||!c.mapping.every(v=>typeof v==='string'&&v.length<=40)||!Number.isInteger(c.intervalMinutes)||(c.intervalMinutes!==0&&(c.intervalMinutes<5||c.intervalMinutes>1440))||!groupIds.has(c.defaults?.groupId)||!a||!['pin','number','image'].includes(a.kind)||!['normal','small'].includes(a.size)||!(colors.includes(a.color)||/^#[a-f0-9]{6}$/i.test(a.color||''))||(a.kind==='image'&&!/^\/mapping\/assets\/[a-z0-9-]+\.svg$/i.test(a.icon||''))||(c.lastSuccess!=null&&!Number.isFinite(Date.parse(c.lastSuccess))))errors.push('Invalid sheet connection');}
   const sourceIds=new Set();d.locations.forEach(m=>{const source=m.sheetSource;if(source!=null){if(!connection||source.connectionId!==connection.id||typeof source.sourceId!=='string'||!source.sourceId||source.sourceId.length>200||typeof source.locationKey!=='string'||source.locationKey.length>2100||typeof source.missing!=='boolean'||sourceIds.has(source.sourceId))errors.push('Invalid sheet marker identity');sourceIds.add(source.sourceId);}});
   const s=d.settings;
+  if(s&&Object.prototype.hasOwnProperty.call(s,'clusterMarkers')&&typeof s.clusterMarkers!=='boolean')errors.push('Invalid clustering setting');
   if(s&&Object.prototype.hasOwnProperty.call(s,'shareWithLink')&&typeof s.shareWithLink!=='boolean')errors.push('Invalid sharing setting');
   if(!s||!Number.isFinite(s.center?.lat)||Math.abs(s.center.lat)>90||!Number.isFinite(s.center?.lng)||Math.abs(s.center.lng)>180||![s.zoom,s.minZoom,s.maxZoom].every(Number.isInteger)||s.minZoom<0||s.maxZoom>22||s.minZoom>s.zoom||s.zoom>s.maxZoom||!['zoomControl','mapTypeControl','legendVisible'].every(k=>typeof s[k]==='boolean'))errors.push('Invalid camera or zoom/control settings');
   if(s?.mapType!=='roadmap')readonly.push('Only road map is enabled in this local slice');
@@ -43,7 +44,7 @@
   return {errors:[...new Set(errors)],readonly:[...new Set(readonly)]};
  }
  function fromLegacy(raw){
-  const d=create();d.title='Synthetic legacy preview';d.compatibility={rawOriginal:raw,adapterVersion:1,unsupported:[]};
+  const d=create();d.settings.clusterMarkers=false;d.title='Synthetic legacy preview';d.compatibility={rawOriginal:raw,adapterVersion:1,unsupported:[]};
   const lines=raw.replace(/\r\n/g,'\n').split(/\n|`/).filter(Boolean);
   lines.forEach((line,i)=>{
    const f=line.split('|');if(f.length!==4||!/^~/.test(f[0])){d.compatibility.unsupported.push('Unrecognized legacy record '+(i+1));return;}

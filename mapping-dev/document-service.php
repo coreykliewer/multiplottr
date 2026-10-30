@@ -37,6 +37,7 @@ class MappingDocuments {
         foreach($d['locations'] as $m){$source=$m['sheetSource']??null;if($source!==null){$key=$source['sourceId']??'';if(!$connection||($source['connectionId']??null)!==($connection['id']??null)||!is_string($key)||!strlen($key)||strlen($key)>800||!is_string($source['locationKey']??null)||strlen($source['locationKey'])>8400||!is_bool($source['missing']??null)||isset($sourceIds[$key]))$errors[]='Invalid sheet marker identity';$sourceIds[$key]=true;}}
         $s=$d['settings']??[];
         if(!$coordinate($s['center']??null)||!is_int($s['zoom']??null)||!is_int($s['minZoom']??null)||!is_int($s['maxZoom']??null)||$s['minZoom']<0||$s['maxZoom']>22||$s['minZoom']>$s['zoom']||$s['zoom']>$s['maxZoom'])$errors[]='Invalid camera settings';
+        if(array_key_exists('clusterMarkers',$s)&&!is_bool($s['clusterMarkers']))$errors[]='Invalid clustering setting';
         if(array_key_exists('shareWithLink',$s)&&!is_bool($s['shareWithLink']))$errors[]='Invalid sharing setting';
         foreach(['zoomControl','mapTypeControl','legendVisible'] as $k)if(!is_bool($s[$k]??null))$errors[]='Invalid control settings';
         if(($s['mapType']??null)!=='roadmap')$ro[]='Unsupported map type retained';
@@ -58,7 +59,7 @@ class MappingDocuments {
     private static function extras($old,$new){
         if(is_object($old)){
             if(!is_object($new))return false;
-            $known=explode(' ','schemaVersion id title description locations groups geometry settings plotDefaults extensions compatibility name originalAddress coordinates appearance groupId format value kind color size label icon visible center lat lng zoom minZoom maxZoom mapType zoomControl mapTypeControl legendVisible shareWithLink sheetConnection sheetSource url mapping headers intervalMinutes defaults lastSuccess connectionId sourceId locationKey missing type radiusMeters');
+            $known=explode(' ','schemaVersion id title description locations groups geometry settings plotDefaults extensions compatibility name originalAddress coordinates appearance groupId format value kind color size label icon visible center lat lng zoom minZoom maxZoom mapType zoomControl mapTypeControl legendVisible clusterMarkers shareWithLink sheetConnection sheetSource url mapping headers intervalMinutes defaults lastSuccess connectionId sourceId locationKey missing type radiusMeters');
             foreach(get_object_vars($old) as $k=>$v){if($k==='extensions'||$k==='compatibility'||!in_array($k,$known,true)){if(!property_exists($new,$k)||json_encode($new->$k)!==json_encode($v))return false;}elseif(property_exists($new,$k)&&!self::extras($v,$new->$k))return false;}
         }elseif(is_array($old)&&is_array($new)){foreach($old as $i=>$v){if(is_object($v)&&isset($v->id)){foreach($new as $candidate)if(is_object($candidate)&&($candidate->id??null)===$v->id&&!self::extras($v,$candidate))return false;}elseif(isset($new[$i])&&!self::extras($v,$new[$i]))return false;}}
         return true;
