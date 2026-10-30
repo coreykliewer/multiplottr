@@ -35,7 +35,7 @@
   if(!s||!Number.isFinite(s.center?.lat)||Math.abs(s.center.lat)>90||!Number.isFinite(s.center?.lng)||Math.abs(s.center.lng)>180||![s.zoom,s.minZoom,s.maxZoom].every(Number.isInteger)||s.minZoom<0||s.maxZoom>22||s.minZoom>s.zoom||s.zoom>s.maxZoom||!['zoomControl','mapTypeControl','legendVisible'].every(k=>typeof s[k]==='boolean'))errors.push('Invalid camera or zoom/control settings');
   if(s?.mapType!=='roadmap')readonly.push('Only road map is enabled in this local slice');
   if(s&&Object.prototype.hasOwnProperty.call(s,'plotDefaults')){
-   const p=s.plotDefaults,a=p?.appearance;
+   const p=s.plotDefaults,a=p?.appearance;if(p&&Object.prototype.hasOwnProperty.call(p,'lastCustomColor')&&!/^#[a-f0-9]{6}$/i.test(p.lastCustomColor||''))errors.push('Invalid remembered custom color');
    if(!p||!groupIds.has(p.groupId))errors.push('Invalid new-marker default group');
    if(!a||!['pin','number','image'].includes(a.kind)||!['normal','small'].includes(a.size)||!(colors.includes(a.color)||/^#[a-f0-9]{6}$/i.test(a.color||''))||(a.kind==='image'&&!/^\/mapping\/assets\/[a-z0-9-]+\.svg$/i.test(a.icon||'')))readonly.push('Unsupported new-marker default appearance retained');
   }
