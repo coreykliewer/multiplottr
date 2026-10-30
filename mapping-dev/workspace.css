@@ -45,3 +45,5 @@ main>aside{background:#E2F3FD}main>aside details[open]{background:#fff;border-ra
 
 /* Shared maps retain group filtering while editing controls are unavailable. */
 .view-only [data-edit],.view-only #place,.view-only #save,.view-only #addGroup{display:none}.group-legend-row{display:flex;align-items:center;gap:8px}.group-legend-row input{width:auto}.group-legend-name{overflow-wrap:anywhere}
+
+#importFileInput[hidden],#sheetTools[hidden],#sheetConnect[hidden],#sheetCancel[hidden]{display:none}#sheetPanel{font-size:12px;margin:10px 0}#sheetPanel>summary{font-size:15px;text-transform:none;background:#eee;color:#333}#sheetPanel p,#sheetSavedURL{overflow-wrap:anywhere}#sheetPanel input{font-size:12px}#sheetPanel button{font-size:12px;margin:4px 3px 4px 0}#sheetErrorMessage{color:#a12622;white-space:pre-wrap}.view-only #sheetPanel{display:none!important}

@@ -28,6 +28,13 @@ class MappingDocuments {
             if(!in_array($a['kind']??null,['pin','number','image'],true)||!in_array($a['size']??null,['normal','small'],true)||(!in_array($a['color']??null,['RED','GREEN','BLUE','ORANGE','YELLOW','GREY','LIME','CYAN','VIOLET','PURPLE','BLACK','WHITE','PINK'],true)&&!preg_match('/^#[a-f0-9]{6}$/i',$a['color']??'')))$ro[]='Unsupported marker appearance';
             if(($a['kind']??'')==='image'&&!preg_match('#^/mapping/assets/[a-z0-9-]+\.svg$#i',$a['icon']??''))$ro[]='Unsupported custom asset retained';
         }
+        $connection=$d['sheetConnection']??null;$sourceIds=[];
+        if($connection!==null){$c=$connection;$a=$c['defaults']['appearance']??[];$interval=$c['intervalMinutes']??null;
+            if(!preg_match('/^[a-f0-9]{32}$/D',$c['id']??'')||!preg_match('#^https://docs\.google\.com/spreadsheets/d/e/[a-zA-Z0-9_-]{20,200}/pub\?gid=\d{1,15}&single=true&output=csv$#D',$c['url']??'')||!is_array($c['headers']??null)||count($c['headers'])>128||!is_array($c['mapping']??null)||count($c['mapping'])>128||!is_int($interval)||($interval!==0&&($interval<5||$interval>1440))||!isset($groups[$c['defaults']['groupId']??''])||!in_array($a['kind']??null,['pin','number','image'],true)||!in_array($a['size']??null,['normal','small'],true)||(!in_array($a['color']??null,['RED','GREEN','BLUE','ORANGE','YELLOW','GREY','LIME','CYAN','VIOLET','PURPLE','BLACK','WHITE','PINK'],true)&&!preg_match('/^#[a-f0-9]{6}$/i',$a['color']??''))||(($a['kind']??'')==='image'&&!preg_match('#^/mapping/assets/[a-z0-9-]+\.svg$#i',$a['icon']??''))||(($c['lastSuccess']??null)!==null&&strtotime($c['lastSuccess'])===false))$errors[]='Invalid sheet connection';
+            foreach(($c['headers']??[]) as $header)if(!is_string($header)||strlen($header)>2000)$errors[]='Invalid sheet headings';
+            foreach(($c['mapping']??[]) as $field)if(!is_string($field)||strlen($field)>40)$errors[]='Invalid sheet mapping';
+        }
+        foreach($d['locations'] as $m){$source=$m['sheetSource']??null;if($source!==null){$key=$source['sourceId']??'';if(!$connection||($source['connectionId']??null)!==($connection['id']??null)||!is_string($key)||!strlen($key)||strlen($key)>800||!is_string($source['locationKey']??null)||strlen($source['locationKey'])>8400||!is_bool($source['missing']??null)||isset($sourceIds[$key]))$errors[]='Invalid sheet marker identity';$sourceIds[$key]=true;}}
         $s=$d['settings']??[];
         if(!$coordinate($s['center']??null)||!is_int($s['zoom']??null)||!is_int($s['minZoom']??null)||!is_int($s['maxZoom']??null)||$s['minZoom']<0||$s['maxZoom']>22||$s['minZoom']>$s['zoom']||$s['zoom']>$s['maxZoom'])$errors[]='Invalid camera settings';
         if(array_key_exists('shareWithLink',$s)&&!is_bool($s['shareWithLink']))$errors[]='Invalid sharing setting';
@@ -51,7 +58,7 @@ class MappingDocuments {
     private static function extras($old,$new){
         if(is_object($old)){
             if(!is_object($new))return false;
-            $known=explode(' ','schemaVersion id title description locations groups geometry settings plotDefaults extensions compatibility name originalAddress coordinates appearance groupId format value kind color size label icon visible center lat lng zoom minZoom maxZoom mapType zoomControl mapTypeControl legendVisible shareWithLink type radiusMeters');
+            $known=explode(' ','schemaVersion id title description locations groups geometry settings plotDefaults extensions compatibility name originalAddress coordinates appearance groupId format value kind color size label icon visible center lat lng zoom minZoom maxZoom mapType zoomControl mapTypeControl legendVisible shareWithLink sheetConnection sheetSource url mapping headers intervalMinutes defaults lastSuccess connectionId sourceId locationKey missing type radiusMeters');
             foreach(get_object_vars($old) as $k=>$v){if($k==='extensions'||$k==='compatibility'||!in_array($k,$known,true)){if(!property_exists($new,$k)||json_encode($new->$k)!==json_encode($v))return false;}elseif(property_exists($new,$k)&&!self::extras($v,$new->$k))return false;}
         }elseif(is_array($old)&&is_array($new)){foreach($old as $i=>$v){if(is_object($v)&&isset($v->id)){foreach($new as $candidate)if(is_object($candidate)&&($candidate->id??null)===$v->id&&!self::extras($v,$candidate))return false;}elseif(isset($new[$i])&&!self::extras($v,$new[$i]))return false;}}
         return true;

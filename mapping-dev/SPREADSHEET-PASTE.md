@@ -1,4 +1,4 @@
-# Spreadsheet import and CSV export
+# Spreadsheet import, CSV export, and public Google Sheets
 
 The new local mapping workspace accepts spreadsheet text in its existing Plot Addresses box. The legacy map and production accounts are unchanged.
 
@@ -10,7 +10,7 @@ The new local mapping workspace accepts spreadsheet text in its existing Plot Ad
 - Review row errors/warnings, descriptions, source IDs, and the list of groups to create. Click **Plot N valid rows** to confirm. Invalid rows stay in the box for correction.
 - Correct the retained text and preview again to retry. Stop plotting and duplicate-dialog cancellation keep completed markers and full remaining rows. Switching maps clears the previous queue and preview.
 
-Supported columns: `description_format`, `icon`, `label`, `source_id`, `address`, `latitude`, `longitude`, `name`, `description`, `color`, `style`, `size`, `group`, `marker_id`, `group_id`. Common aliases include `lat`, `lng`, `lon`, `marker color`, and `marker name`.
+Supported columns: `description_format`, `icon`, `label`, `source_id` (sheet connections), `address`, `latitude`, `longitude`, `name`, `description`, `color`, `style`, `size`, `group`, `marker_id`, `group_id`. Common aliases include `lat`, `lng`, `lon`, `marker color`, and `marker name`.
 
 For example, this CSV creates two new markers after confirmation:
 
@@ -44,8 +44,12 @@ node mapping-dev/legacy-paste-tests.cjs
 node mapping-dev/spreadsheet-tests.cjs
 node mapping-dev/tests.cjs
 node mapping-dev/csv-roundtrip-tests.cjs
+node mapping-dev/public-sheet-tests.cjs
+node mapping-dev/public-sheet-fetch-tests.cjs
+node mapping-dev/sheet-contract-tests.cjs
 powershell -NoProfile -ExecutionPolicy Bypass -File mapping-dev/install.ps1
 & ./local-test/browser-tools/node_modules/node/bin/node.exe mapping-dev/spreadsheet-browser-tests.cjs
+& ./local-test/browser-tools/node_modules/node/bin/node.exe mapping-dev/public-sheet-browser-tests.cjs
 ```
 
 Spreadsheet browser tests mock identity/configuration and geocoding, abort all external requests, and do not write to server account/map tables. They cover previews, mappings, quoted CSV, direct coordinates, validation, groups, duplicates, retries, cancellation, map switching, and signed-out limits. They do not certify Google's live geocoder results.
@@ -109,3 +113,39 @@ Multiplottr version 1 CSV prefixes **every text cell with one literal apostrophe
 
 Keep the version/protection columns and prefixes intact. A spreadsheet application may display the prefix or remove it when editing/re-exporting; if it is removed, Multiplottr reports an encoding error instead of guessing and corrupting values. The exact round-trip guarantee is for Multiplottr's exported CSV. For manually authored files, omit the version column and map normal fields.
 
+## One-way public Google Sheets connection
+
+### Supported source setup
+
+1. Put only public/synthetic information in the source. Include a heading row and a stable unique **source_id** per row. Connections also recognize location_id, record_id, or id as source IDs, and location_name as the marker name. Never use row numbers as identities. Names, coordinates, descriptions, appearance and group columns use the existing preview mapping.
+2. In Google Sheets choose **File > Share > Publish to web**, publish the desired tab, preferably as CSV, and keep automatic republishing enabled. This is separate from **Anyone with the link can view** in the normal sharing dialog. This release does not accept ordinary /edit URLs or use Google account privileges.
+3. Paste the published /spreadsheets/d/e/.../pub or /pubhtml URL into **Connect Google Sheet**. Published HTML links are normalized to the CSV endpoint. Select the numeric tab ID (gid) where needed; it can be copied from the original sheet's URL. This release does not enumerate tabs. If no gid is present it uses 0; supply the actual gid if the chosen tab differs.
+4. Choose refresh behavior, acknowledge that the source is public and source updates will be applied automatically, and click **Preview Google Sheet**. Check mappings, especially the stable source-ID column. All rows must validate before **Confirm sheet connection**.
+5. **Save Map** to persist the connection and loaded source relationships. Refreshes change the in-memory map; save again to persist the latest successful snapshot. There is no autosave in this release.
+
+Google documents publishing individual tabs/formats, automatic republishing, and a delay of a few minutes before published changes appear: [Google publishing help](https://support.google.com/docs/answer/183965?hl=en). [Google Charts spreadsheet access](https://developers.google.com/chart/interactive/docs/spreadsheets) discusses ordinary public/link viewing and authenticated access; those are different mechanisms. Not every browser-viewable sheet is fetchable through this published-CSV integration. Workspace administrators can restrict publication.
+
+### Refresh behavior
+
+- **Refresh Sheet** fetches manually. An owned connected map also refreshes when opened. Optional polling has a five-minute minimum (maximum 1,440 minutes); zero means on-open/manual only. Requests do not overlap. Failures back off exponentially up to 12 times the selected interval; success resets the delay.
+- Source IDs are stored separately from internal marker IDs. Reordering rows does not create duplicates or change internal identities. New rows add markers; existing source IDs update only their managed marker fields. Manual markers remain untouched. Source-managed markers are labeled [Sheet], cannot be dragged or edited through the marker editor, and must be changed in the sheet. Bulk group modification is blocked if it would change managed markers.
+- Valid source coordinates are used directly. Unchanged address-only source locations reuse their resolved coordinates even when their name/color changes. Only new or changed address-only locations are geocoded. Any fetch, schema, ID, HTML, group, or geocoding error retains the last successful map. Refreshes are atomic, not partial updates.
+- Missing source rows are retained and marked for review. **Remove missing rows** lists them and requires explicit confirmation. Reappearing rows clear the missing flag. **Disconnect** keeps the current markers and makes them manually editable.
+- Changed source headings require disconnecting and previewing again rather than silently applying the wrong mapping. Map edits during asynchronous reconciliation are preserved and cause the refresh to stop rather than overwrite them. Cancellation and map switching invalidate late callbacks.
+- The UI shows last success time, missing counts, and actionable errors. Read-only shared maps display the saved snapshot without connection controls or background refreshing. If a sheet becomes unavailable/unpublished, saved last-known markers remain viewable.
+
+### Restricted local fetch helper
+
+The real Google publication tested here redirects CSV downloads to a Google Sheets download host, which the original browser-only/no-redirect policy correctly rejected. Therefore this release uses a restricted local helper rather than giving the isolated PHP server general internet access.
+
+- Helper binds **127.0.0.1:8081 only**. Requests originate from the local mapping browser with credentials omitted; it never forwards account cookies, authorization, or referrers to Google.
+- It accepts only normalized HTTPS docs.google.com/spreadsheets/d/e/.../pub sources and numeric gid values. It follows at most two redirects, only to HTTPS doc-...-sheets.googleusercontent.com hosts with /pub/ paths. Login redirects and arbitrary hosts/ports/URL forms are rejected.
+- Downloads have a 15-second total timeout and 1 MB streamed limit. HTML/login responses are rejected. Only the local app's origins/Host headers, GET source path, two concurrent requests, and at most 30 requests/minute are allowed.
+- The installer starts the helper hidden and adds it to local-test/Start.cmd and Stop.cmd. Start/Stop scripts verify the helper process before stopping it. The router CSP change is scoped to /mapping/ only and permits the loopback helper; the old app and PHP isolation remain unchanged. There is no server-side fetch endpoint open to arbitrary URLs.
+- Manual startup: powershell -NoProfile -ExecutionPolicy Bypass -File mapping-dev/Start-Sheet-Fetch.ps1. Stop with the corresponding Stop-Sheet-Fetch.ps1 script. Port 8081 must be available. This local host service is not a production deployment architecture.
+
+### Verification and remaining limits
+
+Mocked tests cover source initialization, stable-ID changes, row reordering/new/missing/invalid rows, unavailable sources, save/reopen, on-open polling, overlap/cancellation/map switching, backoff, source edit restrictions, shared views, and geocoding reuse. The helper tests restrict host/origin/method/redirects and enforce streamed response bounds. PHP schema/compatibility checks do not access database records.
+
+A separate **live** check on 2026-10-28 used the user's published synthetic tab (gid 1591404261): real download, browser preview, initial connection, six distinct source IDs, six valid markers, and repeat refresh all passed with **zero geocoding requests**. The account and map session were browser doubles; no real account/map records were saved. The live check did not edit the source, so publication delay/change propagation remains unverified. Live address geocoding, private sheets, authentication, write-back, autosave and billing remain outside this stage.

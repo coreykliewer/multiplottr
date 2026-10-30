@@ -1,0 +1,2 @@
+const fs=require('fs');for(const [file,action] of [['Start.cmd','Start'],['Stop.cmd','Stop']]){const path=require('path').join(__dirname,'../local-test',file);let s=fs.readFileSync(path,'utf8');const line='powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0..\\mapping-dev\\'+action+'-Sheet-Fetch.ps1"';if(!s.includes('Sheet-Fetch.ps1'))fs.writeFileSync(path,s.replace('pause',line+'\r\npause'));}
+console.log('Local start/stop scripts include the restricted sheet helper.');
