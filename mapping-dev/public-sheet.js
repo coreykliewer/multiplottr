@@ -38,6 +38,11 @@
    let groupId=entry.groupId;if(entry.newGroup){const key=entry.sourceGroupId||S.norm(entry.newGroup);if(groups.has(key))groupId=groups.get(key);else{const candidates=doc.groups.filter(g=>entry.sourceGroupId?g.extensions?.csvSourceId===entry.sourceGroupId:S.norm(g.name)===S.norm(entry.newGroup));if(candidates.length>1)throw Error('Group became ambiguous.');if(candidates.length)groupId=candidates[0].id;else{groupId=M.id();doc.groups.push({id:groupId,name:entry.newGroup,visible:true,...(entry.sourceGroupId?{extensions:{csvSourceId:entry.sourceGroupId}}:{})});}groups.set(key,groupId);}}
    if(!doc.groups.some(g=>g.id===groupId))throw Error('A referenced group was removed. Preview the connection again.');
    const values={name:entry.name,originalAddress:entry.originalAddressOverride!==undefined?entry.originalAddressOverride:(entry.address||null),coordinates:point,description:entry.description,appearance:entry.appearance,groupId,sheetSource:{connectionId:connection.id,sourceId:id,locationKey,missing:false}};
+   // Source-owned fields replace supported values; retain unknown nested fields so
+   // forward-compatible saved documents can still pass the server preservation gate.
+   if(existing)for(const [key,known] of Object.entries({appearance:['kind','color','size','icon','label'],coordinates:['lat','lng'],description:['format','value'],sheetSource:['connectionId','sourceId','locationKey','missing']})){
+    values[key]={...Object.fromEntries(Object.entries(existing[key]||{}).filter(([name])=>!known.includes(name))),...values[key]};
+   }
    if(existing){if(JSON.stringify({...existing,...values})!==JSON.stringify(existing))updated++;Object.assign(existing,values);}else{if(doc.locations.length>=500)throw Error('Refresh would exceed the 500-marker map limit.');doc.locations.push({id:M.id(),...values,extensions:{}});added++;}
   }
   const missing=[];doc.locations.forEach(m=>{if(m.sheetSource?.connectionId===connection.id&&!seen.has(m.sheetSource.sourceId)){m.sheetSource.missing=true;missing.push(m.sheetSource.sourceId);}});

@@ -7,6 +7,12 @@ class MappingDocuments {
         $db->query('CREATE TABLE IF NOT EXISTS local_document_maps (id CHAR(32) PRIMARY KEY, owner_id INT UNSIGNED NOT NULL, revision INT UNSIGNED NOT NULL, payload LONGTEXT NOT NULL, create_hash CHAR(64) NOT NULL, FOREIGN KEY(owner_id) REFERENCES local_membership_users(id) ON DELETE CASCADE) ENGINE=InnoDB');
     }
     public static function inspect($doc) {
+        // JSON types are untrusted. Malformed optional settings must yield 422,
+        // rather than escaping validation as a PHP 8 TypeError/ValueError (500).
+        try { return self::inspectDocument($doc); }
+        catch (\TypeError | \ValueError $error) { return [['Invalid document field type'],[]]; }
+    }
+    private static function inspectDocument($doc) {
         $d=json_decode(json_encode($doc),true);$errors=[];$ro=[];
         if(!is_array($d))return [['Document object required'],[]];
         if(($d['schemaVersion']??null)!==1)$ro[]='Unsupported document version';
@@ -31,8 +37,8 @@ class MappingDocuments {
         $connection=$d['sheetConnection']??null;$sourceIds=[];
         if($connection!==null){$c=$connection;$a=$c['defaults']['appearance']??[];$interval=$c['intervalMinutes']??null;
             if(!preg_match('/^[a-f0-9]{32}$/D',$c['id']??'')||!preg_match('#^https://docs\.google\.com/spreadsheets/d/e/[a-zA-Z0-9_-]{20,200}/pub\?gid=\d{1,15}&single=true&output=csv$#D',$c['url']??'')||!is_array($c['headers']??null)||count($c['headers'])>128||!is_array($c['mapping']??null)||count($c['mapping'])>128||!is_int($interval)||($interval!==0&&($interval<5||$interval>1440))||!isset($groups[$c['defaults']['groupId']??''])||!in_array($a['kind']??null,['pin','number','image'],true)||!in_array($a['size']??null,['normal','small'],true)||(!in_array($a['color']??null,['RED','GREEN','BLUE','ORANGE','YELLOW','GREY','LIME','CYAN','VIOLET','PURPLE','BLACK','WHITE','PINK'],true)&&!preg_match('/^#[a-f0-9]{6}$/i',$a['color']??''))||(($a['kind']??'')==='image'&&!preg_match('#^/mapping/assets/[a-z0-9-]+\.svg$#i',$a['icon']??''))||(($c['lastSuccess']??null)!==null&&strtotime($c['lastSuccess'])===false))$errors[]='Invalid sheet connection';
-            foreach(($c['headers']??[]) as $header)if(!is_string($header)||strlen($header)>2000)$errors[]='Invalid sheet headings';
-            foreach(($c['mapping']??[]) as $field)if(!is_string($field)||strlen($field)>40)$errors[]='Invalid sheet mapping';
+            foreach((is_array($c['headers']??null)?$c['headers']:[]) as $header)if(!is_string($header)||strlen($header)>2000)$errors[]='Invalid sheet headings';
+            foreach((is_array($c['mapping']??null)?$c['mapping']:[]) as $field)if(!is_string($field)||strlen($field)>40)$errors[]='Invalid sheet mapping';
         }
         foreach($d['locations'] as $m){$source=$m['sheetSource']??null;if($source!==null){$key=$source['sourceId']??'';if(!$connection||($source['connectionId']??null)!==($connection['id']??null)||!is_string($key)||!strlen($key)||strlen($key)>800||!is_string($source['locationKey']??null)||strlen($source['locationKey'])>8400||!is_bool($source['missing']??null)||isset($sourceIds[$key]))$errors[]='Invalid sheet marker identity';$sourceIds[$key]=true;}}
         $s=$d['settings']??[];
