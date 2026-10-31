@@ -24,7 +24,7 @@ The same npm commands work in PowerShell. `npm run check` checks all workspace J
 | `sheet-contract-tests.cjs` | Saved connection schema and server unknown-field preservation gate |
 | `clustering-contract-tests.cjs` | Official vendored 2.6.2 checksum/license, settings and JS/PHP parity |
 | `clustering-unit-tests.cjs` | Controller doubles: 5/105 markers, movement/removal/hiding/toggle, duplicate/max-zoom chooser and count icon |
-| `review-regression-tests.cjs` | Nested unknown-field preservation and 16 malformed document cases |
+| `review-regression-tests.cjs` | Nested unknown-field preservation and 17 malformed document cases |
 | `live-tooling-contract-tests.cjs` | No-argument live tools reject before reading local setup or loading Playwright |
 
 Only the fetch-server suite opens a temporary HTTP server, bound to loopback on an ephemeral port. Successful Google responses are synthetic/injected in this gate. The cluster controller suite uses doubles, not the real Google Maps renderer or spatial algorithm. Vendor bytes are protected by `.gitattributes` so Windows CRLF conversion cannot change their SHA-256. The legacy oracle contains only the two historical parser functions, with synthetic inputs and stubbed dependencies; the preserved review application is never bootstrapped. Reports are not generated unless `WRITE_LOCAL_TEST_EVIDENCE=1` is explicitly set for `tests.cjs`.
@@ -41,6 +41,7 @@ These are **not included** in the credential-free gate:
 | --- | --- |
 | `browser-tests.cjs`, `clustering-browser-tests.cjs`, `new-marker-defaults-browser-tests.cjs`, `default-camera-tests.cjs`, `plot-visibility-tests.cjs`, `plot-queue-tests.cjs`, `sidebar-tests.cjs` | Existing local app/membership/document API on localhost:8080, Docker synthetic database, Playwright Core 1.64.1 at `local-test/browser-tools/node_modules/playwright-core`, compatible Node, installed Edge at the Windows path in each script, approved development Maps configuration/key and Google network access |
 | `sheet-gap-browser-tests.cjs` | Same local browser/Docker/Maps setup; routes controlled CSV fixtures, checks real Maps rendering and save/reload, cleans up its synthetic account/map |
+| `review-browser-tests.cjs` | Same approved local browser/Docker/Maps setup; five checks for nested metadata, rendered marker identity, real save/reopen/resave, fourteen rejected POST/PUT requests, unchanged data/revision and valid recovery; controlled CSV, no live Google Sheet |
 | `sharing-contract-tests.cjs` | Playwright request client and local Docker membership/document API; no Google rendering |
 | `spreadsheet-browser-tests.cjs`, `public-sheet-browser-tests.cjs`, `offline-browser.cjs` | Playwright/Edge and locally served workspace; network/session/configuration doubles, Google disabled. These scripts still depend on the local harness paths and are not fresh-clone CI tests |
 | `regressions.cjs`, `local-test/Test-Local.ps1`, `local-test/Test-Membership.ps1` | Existing private local harness/Docker and PowerShell. The wrapper temporarily changes and restores the ignored Maps config; do not run it in hosted CI |

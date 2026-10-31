@@ -17,6 +17,7 @@ const php=require('./test-support/php.cjs');
  for(const value of [null,1,'invalid',[]])add('settings '+JSON.stringify(value),d=>d.settings=value);
  for(const value of [1,'invalid',[],{id:[],headers:'bad',mapping:3}])add('sheetConnection '+JSON.stringify(value),d=>d.sheetConnection=value);
  add('array identity',d=>d.id=[]);add('null location',d=>d.locations=[null]);
+ add('scalar connection headings',d=>{d.sheetConnection=M.copy(before.sheetConnection);d.sheetConnection.headers='bad';d.sheetConnection.mapping=3;});
  add('invalid source identity',d=>{d.locations=M.copy(before.locations);d.sheetConnection=M.copy(before.sheetConnection);d.locations[0].sheetSource.sourceId=[];});
  for(const {label,document} of malformed){const inspected=M.inspect(document);assert(inspected.errors.length||inspected.readonly.length,label);}
  const payload=Buffer.from(JSON.stringify(malformed)).toString('base64');
