@@ -7,6 +7,7 @@
 !/BASELINE-PRESERVATION.md
 !/preservation/
 !/mapping-dev/
+!/.github/
 
 # Apply even inside explicitly preserved source sets.
 **/node_modules/

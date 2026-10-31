@@ -53,6 +53,8 @@ The new `local_document_maps` table contains only synthetic workspace documents 
 
 ## Run checks
 
+For a fresh clone and credential-free CI, start with [TESTING.md](TESTING.md). The commands below describe the separate existing local browser/Docker harness; that harness is not included in this checkout.
+
 From the repository root, with the existing local services running:
 
 ```powershell

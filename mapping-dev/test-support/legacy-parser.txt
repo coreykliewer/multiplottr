@@ -1,0 +1,76 @@
+// Frozen isolated legacy parser oracle. No application bootstrap or private configuration.
+function timedGeocoding(val, ii, linesLength) {
+				$('#batchAddressesField').val('');
+    setTimeout ( function () {
+			fields = val.split('|');
+
+      if (fields[1]===undefined) {fields[1]=fields[0];}
+			if (fields[1]==='') {fields[1]=fields[0];}
+			if (fields[2]===undefined) {fields[2]=$('#markerName').val();}
+			if (fields[3]===undefined) {fields[3]=$('#currentGroupName').val();}
+
+			$('#progressContainer, #modalBack').show();
+			{
+				addressLineCount = addressLineCount-1;
+				var progress = addressLineCount/linesLength;
+				progress = 100-(progress*100);
+				$( "#progressbar" ).progressbar({value: progress});
+				geoCodeListArray.push(val);
+				$('#numOfAddresses').html(addressLineCount);
+				geoCodeList(fields[0], fields[1], fields[2], fields[3], ii, linesLength);
+			}
+
+
+			}, i*1000);
+			$('#progressContainer, #modalBack').hide();
+
+}
+
+
+function batchGeocode(addresses) {
+	initialize();
+    var newAddresses;
+
+	geoCodeListArray = [];
+
+	if (!resizedBatch) {
+		resizedBatch=true;
+		$('#batchAddresses section').animate({bottom:'+=150'},500);
+		$('#mapTool section').animate({top:'-=150'},500);
+	}
+
+	if (addresses!=='') {
+		//newAddresses=addresses.replace(/'/g, "\\'");
+		newAddresses=addresses.replace(/\r/g,'`');
+		newAddresses=newAddresses.replace(/\n/g,'`');
+        newAddresses=newAddresses.replace(/\t/g,' ');
+		newAddresses=newAddresses.replace(/\| /g,'|');
+		newAddresses=newAddresses.replace(/\" /g,'"');
+		newAddresses=newAddresses.replace(/ \"/g,'"');
+		newAddresses=newAddresses.replace(/> /g,'>');
+		newAddresses=newAddresses.replace(/ </g,'<');
+		var lines = newAddresses.split('`');
+		var fields = [];
+
+		//alert('lines.length: '+lines);
+		lines = lines.filter(function(e){return e;});
+		//alert('lines.length: '+lines);
+		addressLineCount = lines.length;
+		$('#numOfAddresses').html(addressLineCount);
+		//geocoding
+		//if ($("#wpLogin").text()!=="YES") {alert('You must be a registered user to geocode addresses');} else
+		{
+			for (i=0; i<lines.length; i++) {
+				var locStorage = parseInt(localStorage.locationsPlotted);
+				locStorage=locStorage+1;
+				localStorage.locationsPlotted=locStorage.toString();
+				timedGeocoding(lines[i], i, addressLineCount);
+			}
+		}
+
+	} else {
+
+		runSubmit();
+
+	}
+}

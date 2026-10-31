@@ -7,6 +7,12 @@ class MappingDocuments {
         $db->query('CREATE TABLE IF NOT EXISTS local_document_maps (id CHAR(32) PRIMARY KEY, owner_id INT UNSIGNED NOT NULL, revision INT UNSIGNED NOT NULL, payload LONGTEXT NOT NULL, create_hash CHAR(64) NOT NULL, FOREIGN KEY(owner_id) REFERENCES local_membership_users(id) ON DELETE CASCADE) ENGINE=InnoDB');
     }
     public static function inspect($doc) {
+        // JSON types are untrusted. Malformed optional settings must yield 422,
+        // rather than escaping validation as a PHP 8 TypeError/ValueError (500).
+        try { return self::inspectDocument($doc); }
+        catch (\TypeError | \ValueError $error) { return [['Invalid document field type'],[]]; }
+    }
+    private static function inspectDocument($doc) {
         $d=json_decode(json_encode($doc),true);$errors=[];$ro=[];
         if(!is_array($d))return [['Document object required'],[]];
         if(($d['schemaVersion']??null)!==1)$ro[]='Unsupported document version';
@@ -28,12 +34,21 @@ class MappingDocuments {
             if(!in_array($a['kind']??null,['pin','number','image'],true)||!in_array($a['size']??null,['normal','small'],true)||(!in_array($a['color']??null,['RED','GREEN','BLUE','ORANGE','YELLOW','GREY','LIME','CYAN','VIOLET','PURPLE','BLACK','WHITE','PINK'],true)&&!preg_match('/^#[a-f0-9]{6}$/i',$a['color']??'')))$ro[]='Unsupported marker appearance';
             if(($a['kind']??'')==='image'&&!preg_match('#^/mapping/assets/[a-z0-9-]+\.svg$#i',$a['icon']??''))$ro[]='Unsupported custom asset retained';
         }
+        $connection=$d['sheetConnection']??null;$sourceIds=[];
+        if($connection!==null){$c=$connection;$a=$c['defaults']['appearance']??[];$interval=$c['intervalMinutes']??null;
+            if(!preg_match('/^[a-f0-9]{32}$/D',$c['id']??'')||!preg_match('#^https://docs\.google\.com/spreadsheets/d/e/[a-zA-Z0-9_-]{20,200}/pub\?gid=\d{1,15}&single=true&output=csv$#D',$c['url']??'')||!is_array($c['headers']??null)||count($c['headers'])>128||!is_array($c['mapping']??null)||count($c['mapping'])>128||!is_int($interval)||($interval!==0&&($interval<5||$interval>1440))||!isset($groups[$c['defaults']['groupId']??''])||!in_array($a['kind']??null,['pin','number','image'],true)||!in_array($a['size']??null,['normal','small'],true)||(!in_array($a['color']??null,['RED','GREEN','BLUE','ORANGE','YELLOW','GREY','LIME','CYAN','VIOLET','PURPLE','BLACK','WHITE','PINK'],true)&&!preg_match('/^#[a-f0-9]{6}$/i',$a['color']??''))||(($a['kind']??'')==='image'&&!preg_match('#^/mapping/assets/[a-z0-9-]+\.svg$#i',$a['icon']??''))||(($c['lastSuccess']??null)!==null&&strtotime($c['lastSuccess'])===false))$errors[]='Invalid sheet connection';
+            foreach((is_array($c['headers']??null)?$c['headers']:[]) as $header)if(!is_string($header)||strlen($header)>2000)$errors[]='Invalid sheet headings';
+            foreach((is_array($c['mapping']??null)?$c['mapping']:[]) as $field)if(!is_string($field)||strlen($field)>40)$errors[]='Invalid sheet mapping';
+        }
+        foreach($d['locations'] as $m){$source=$m['sheetSource']??null;if($source!==null){$key=$source['sourceId']??'';if(!$connection||($source['connectionId']??null)!==($connection['id']??null)||!is_string($key)||!strlen($key)||strlen($key)>800||!is_string($source['locationKey']??null)||strlen($source['locationKey'])>8400||!is_bool($source['missing']??null)||isset($sourceIds[$key]))$errors[]='Invalid sheet marker identity';$sourceIds[$key]=true;}}
         $s=$d['settings']??[];
         if(!$coordinate($s['center']??null)||!is_int($s['zoom']??null)||!is_int($s['minZoom']??null)||!is_int($s['maxZoom']??null)||$s['minZoom']<0||$s['maxZoom']>22||$s['minZoom']>$s['zoom']||$s['zoom']>$s['maxZoom'])$errors[]='Invalid camera settings';
+        if(array_key_exists('clusterMarkers',$s)&&!is_bool($s['clusterMarkers']))$errors[]='Invalid clustering setting';
+        if(array_key_exists('shareWithLink',$s)&&!is_bool($s['shareWithLink']))$errors[]='Invalid sharing setting';
         foreach(['zoomControl','mapTypeControl','legendVisible'] as $k)if(!is_bool($s[$k]??null))$errors[]='Invalid control settings';
         if(($s['mapType']??null)!=='roadmap')$ro[]='Unsupported map type retained';
         if(array_key_exists('plotDefaults',$s)){
-            $p=$s['plotDefaults'];$a=$p['appearance']??[];
+            $p=$s['plotDefaults'];$a=$p['appearance']??[];if(array_key_exists('lastCustomColor',$p)&&(!is_string($p['lastCustomColor'])||!preg_match('/^#[a-f0-9]{6}$/i',$p['lastCustomColor'])))$errors[]='Invalid remembered custom color';
             if(!is_array($p)||!is_string($p['groupId']??null)||!isset($groups[$p['groupId']]))$errors[]='Invalid new-marker default group';
             if(!in_array($a['kind']??null,['pin','number','image'],true)||!in_array($a['size']??null,['normal','small'],true)||(!in_array($a['color']??null,['RED','GREEN','BLUE','ORANGE','YELLOW','GREY','LIME','CYAN','VIOLET','PURPLE','BLACK','WHITE','PINK'],true)&&!preg_match('/^#[a-f0-9]{6}$/i',$a['color']??''))||(($a['kind']??'')==='image'&&!preg_match('#^/mapping/assets/[a-z0-9-]+\.svg$#i',$a['icon']??'')))$ro[]='Unsupported new-marker default appearance retained';
         }
@@ -46,17 +61,23 @@ class MappingDocuments {
         return [array_values(array_unique($errors)),array_values(array_unique($ro))];
     }
     private function read($id,$uid){$s=$this->db->prepare('SELECT revision,payload,create_hash FROM local_document_maps WHERE id=? AND owner_id=?');$s->bind_param('si',$id,$uid);$s->execute();$r=$s->get_result()->fetch_assoc();$s->close();return $r;}
-    private function result($row){$doc=json_decode($row['payload']);list($e,$ro)=self::inspect($doc);return ['document'=>$doc,'revision'=>(int)$row['revision'],'readonly'=>$ro];}
+    private function result($row,$canEdit=true){$doc=json_decode($row['payload']);list($e,$ro)=self::inspect($doc);return ['document'=>$doc,'revision'=>(int)$row['revision'],'readonly'=>$ro,'canEdit'=>$canEdit];}
     private static function extras($old,$new){
         if(is_object($old)){
             if(!is_object($new))return false;
-            $known=explode(' ','schemaVersion id title description locations groups geometry settings plotDefaults extensions compatibility name originalAddress coordinates appearance groupId format value kind color size label icon visible center lat lng zoom minZoom maxZoom mapType zoomControl mapTypeControl legendVisible type radiusMeters');
+            $known=explode(' ','schemaVersion id title description locations groups geometry settings plotDefaults lastCustomColor extensions compatibility name originalAddress coordinates appearance groupId format value kind color size label icon visible center lat lng zoom minZoom maxZoom mapType zoomControl mapTypeControl legendVisible clusterMarkers shareWithLink sheetConnection sheetSource url mapping headers intervalMinutes defaults lastSuccess connectionId sourceId locationKey missing type radiusMeters');
             foreach(get_object_vars($old) as $k=>$v){if($k==='extensions'||$k==='compatibility'||!in_array($k,$known,true)){if(!property_exists($new,$k)||json_encode($new->$k)!==json_encode($v))return false;}elseif(property_exists($new,$k)&&!self::extras($v,$new->$k))return false;}
         }elseif(is_array($old)&&is_array($new)){foreach($old as $i=>$v){if(is_object($v)&&isset($v->id)){foreach($new as $candidate)if(is_object($candidate)&&($candidate->id??null)===$v->id&&!self::extras($v,$candidate))return false;}elseif(isset($new[$i])&&!self::extras($v,$new[$i]))return false;}}
         return true;
     }
     public function dispatch($path,$member){
         LocalMembership::session();$user=$member->user();$method=$_SERVER['REQUEST_METHOD'];
+        if($method==='GET'&&preg_match('#^/__local_documents/maps/([a-f0-9]{32})$#D',$path,$match)){
+            $stmt=$this->db->prepare('SELECT owner_id,revision,payload,create_hash FROM local_document_maps WHERE id=?');$stmt->bind_param('s',$match[1]);$stmt->execute();$row=$stmt->get_result()->fetch_assoc();
+            $owner=$row&&$user&&(int)$row['owner_id']===(int)$user['id'];$doc=$row?json_decode($row['payload']):null;
+            if(!$row||(!$owner&&($doc->settings->shareWithLink??false)!==true))LocalMembership::respond(404,['error'=>'Map not found or not shared']);
+            LocalMembership::respond(200,$this->result($row,(bool)$owner));
+        }
         if(!$user)LocalMembership::respond(401,['error'=>'Local synthetic sign-in required']);$uid=(int)$user['id'];
         if($method!=='GET'){
             if((isset($_SERVER['HTTP_ORIGIN'])&&$_SERVER['HTTP_ORIGIN']!=='http://'.($_SERVER['HTTP_HOST']??''))||!hash_equals($_SESSION['local_csrf'],$_SERVER['HTTP_X_LOCAL_CSRF']??''))LocalMembership::respond(403,['error'=>'Request verification failed']);
